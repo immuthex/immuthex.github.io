@@ -6,9 +6,65 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>©2021 Immuthex</copyright>
+    <lastBuildDate>Sun, 07 Mar 2021 14:59:19 +0800</lastBuildDate>
     
         <atom:link href="https://www.immuthex.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>git cherry-pick 教程</title>
+      <link>https://www.immuthex.com/posts/git-cherry-pick-tutorial/</link>
+      <pubDate>Sun, 07 Mar 2021 14:59:19 +0800</pubDate>
+      
+      <guid>https://www.immuthex.com/posts/git-cherry-pick-tutorial/</guid>
+      <description>&lt;p&gt;在多分支开发的时候会有需要把一个分支的部分commit应用到其他的分支上，&lt;code&gt;git merge&lt;/code&gt;就满足不了这个需求了，这个时候就可以用&lt;code&gt;git cherry-pick&lt;/code&gt;
+，它的作用是选择已存在的commit应用到当前分支上，并产生新的commit SHA-1 校验和。下面是这个命令的图解示例。&lt;/p&gt;
+&lt;h1 id=&#34;图解示例&#34;&gt;图解示例&lt;/h1&gt;
+&lt;p&gt;如下有两个分支&lt;code&gt;master&lt;/code&gt;和&lt;code&gt;dev&lt;/code&gt;，从&lt;code&gt;C2&lt;/code&gt;开始两个分支开始有不同的commits。&lt;/p&gt;
+&lt;p&gt;&lt;img  src=&#34;https://www.immuthex.com/img/git-cherry-pick-tutorial/sample1.png&#34;
+        alt=&#34;sample1&#34;/&gt;&lt;/p&gt;
+&lt;p&gt;需要把&lt;code&gt;dev&lt;/code&gt;的&lt;code&gt;C6&lt;/code&gt;合并到&lt;code&gt;master&lt;/code&gt;，只需在&lt;code&gt;master&lt;/code&gt;分支上执行&lt;code&gt;git cherry-pick C6&lt;/code&gt;，就会把&lt;code&gt;dev&lt;/code&gt;分支的&lt;code&gt;C6&lt;/code&gt;应用到&lt;code&gt;master&lt;/code&gt;分支上并产生一个新的commit&lt;code&gt;C6&#39;&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img  src=&#34;https://www.immuthex.com/img/git-cherry-pick-tutorial/sample2.png&#34;
+        alt=&#34;sample2&#34;/&gt;&lt;/p&gt;
+&lt;p&gt;如果要合并多个commits，比如&lt;code&gt;C7&lt;/code&gt;和&lt;code&gt;C8&lt;/code&gt;两个commits，可以执行&lt;code&gt;git cherry-pick C7 C8&lt;/code&gt;，则git提交记录就会变成下面这样。&lt;/p&gt;
+&lt;p&gt;&lt;img  src=&#34;https://www.immuthex.com/img/git-cherry-pick-tutorial/sample3.png&#34;
+        alt=&#34;sample3&#34;/&gt;&lt;/p&gt;
+&lt;p&gt;需要注意的是，新的commit SHA-1 校验和会和原来的commit SHA-1 校验和不一样。&lt;/p&gt;
+&lt;h1 id=&#34;基本用法&#34;&gt;基本用法&lt;/h1&gt;
+&lt;p&gt;下面我们来动手感受一下。先准备一下git的提交记录，示例如下图：&lt;/p&gt;
+&lt;p&gt;&lt;img  src=&#34;https://www.immuthex.com/img/git-cherry-pick-tutorial/prepare-git-commits.png&#34;
+        alt=&#34;prepare git commits&#34;/&gt;&lt;/p&gt;
+&lt;p&gt;这个时候&lt;code&gt;master&lt;/code&gt;分支有C1，C2，C3，C4文件，&lt;code&gt;dev&lt;/code&gt;分支有C1，C2，C5，C6，C7，C8，C9文件。&lt;/p&gt;
+&lt;p&gt;&lt;img  src=&#34;https://www.immuthex.com/img/git-cherry-pick-tutorial/view-files-on-both-branch.png&#34;
+        alt=&#34;view files on both branch&#34;/&gt;&lt;/p&gt;
+&lt;p&gt;接下来我们把&lt;code&gt;dev&lt;/code&gt;分支的一些commits应用到&lt;code&gt;master&lt;/code&gt;分支：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;根据之前的终端记录或者通过&lt;code&gt;git log dev&lt;/code&gt;查看&lt;code&gt;C6&lt;/code&gt;的 SHA-1 校验和是&lt;code&gt;fca3793&lt;/code&gt;，在&lt;code&gt;master&lt;/code&gt;分支上执行&lt;code&gt;git cherry-pick fca3793&lt;/code&gt;，可以看到新增了一个 SHA-1
+校验和为&lt;code&gt;50982a2&lt;/code&gt;
+的commit并且在&lt;code&gt;master&lt;/code&gt;分支上多了一个C6文件。&lt;/li&gt;
+&lt;li&gt;执行&lt;code&gt;git cherry-pick d67e9f6 7bf5e7d&lt;/code&gt;之后，&lt;code&gt;master&lt;/code&gt;分支又多了C7，C8两个文件。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img  src=&#34;https://www.immuthex.com/img/git-cherry-pick-tutorial/do-cherry-pick.png&#34;
+        alt=&#34;do cherry pick&#34;/&gt;&lt;/p&gt;
+&lt;h1 id=&#34;其他用法&#34;&gt;其他用法&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;如果想应用连续的多个commits还可以使用&lt;code&gt;git cherry-pick commit1..commitn&lt;/code&gt;，应用 SHA-1 校验和从&lt;code&gt;commit1&lt;/code&gt;到&lt;code&gt;commitn&lt;/code&gt;的commits，&lt;strong&gt;注意这里并不包含&lt;code&gt;commit1&lt;/code&gt;
+，如果需要包含可以执行&lt;code&gt;git cherry-pick commit1^..commitn&lt;/code&gt;&lt;/strong&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果只想把某一个分支最后一个commit应用到当前分支，可以直接使用&lt;code&gt;git cherry-pick branch-name&lt;/code&gt;，这个命令的效果是，将&lt;code&gt;branch-name&lt;/code&gt;分支最后一个commit应用到当前分支。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;当然实际使用过程中，使用&lt;code&gt;cherry-pick&lt;/code&gt;可能会出现冲突，例如提示如下：
+&lt;img  src=&#34;https://www.immuthex.com/img/git-cherry-pick-tutorial/cherry-pick-conflict.png&#34;
+        alt=&#34;cherry pick conflict&#34;/&gt;&lt;/p&gt;
+&lt;p&gt;解决冲突再执行&lt;code&gt;git add &amp;lt;paths&amp;gt;&lt;/code&gt;将文件标记为以解决冲突，或者执行&lt;code&gt;git rm &amp;lt;paths&amp;gt;&lt;/code&gt;直接从暂存区和工作区删除文件，最后执行&lt;code&gt;git cherry-pick --continue&lt;/code&gt;
+，则完成这次&lt;code&gt;cherry-pick&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;如果想要取消这次的&lt;code&gt;cherry-pick&lt;/code&gt;操作可以执行&lt;code&gt;git cherry-pick --abort&lt;/code&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
     
   </channel>
 </rss>

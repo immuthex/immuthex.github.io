@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml"><url>
-    <loc>https://www.immuthex.com/categories/</loc></url><url>
-    <loc>https://www.immuthex.com/</loc></url><url>
-    <loc>https://www.immuthex.com/tags/</loc></url></urlset>
+    <loc>https://www.immuthex.com/tags/git/</loc><lastmod>2021-03-07T14:59:19+08:00</lastmod></url><url>
+    <loc>https://www.immuthex.com/posts/git-cherry-pick-tutorial/</loc><lastmod>2021-03-07T14:59:19+08:00</lastmod></url><url>
+    <loc>https://www.immuthex.com/</loc><lastmod>2021-03-07T14:59:19+08:00</lastmod></url><url>
+    <loc>https://www.immuthex.com/posts/</loc><lastmod>2021-03-07T14:59:19+08:00</lastmod></url><url>
+    <loc>https://www.immuthex.com/tags/</loc><lastmod>2021-03-07T14:59:19+08:00</lastmod></url><url>
+    <loc>https://www.immuthex.com/categories/</loc></url></urlset>
