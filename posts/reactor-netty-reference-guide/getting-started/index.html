@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.81.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南-2.入门指南&nbsp;&ndash;&nbsp;Immuthex的博客</title><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Reactor Netty参考指南-2.入门指南" /><body><section id="header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Immuthex的博客</span></a></span>
+        <span class="header right-side"><div class="nav wrap">
+    <nav class="nav"><a class="nav item" href="/categories/">分类</a><a class="nav item" href="/tags/">标签</a><a class="nav item" href="https://github.com/immuthex" target="_blank" one-link-mark="yes"><span
+                class="iconfont icon-github"></span>&nbsp;Github</a>
+    </nav>
+</div></span></div></section><section id="content"><div class="article-container"><section class="article header">
+    <h1 class="article title">Reactor Netty参考指南-2.入门指南</h1><p class="article date">2021-02-28</p></section><article class="article markdown-body"><h2 id="目录contents"><a href="../contents">目录</a>
+</h2>
+<hr>
+<h1 id="原文地址httpsprojectreactoriodocsnettyreleasereferenceindexhtmlgetting-started"><a href="https://projectreactor.io/docs/netty/release/reference/index.html#getting-started"target="_blank" rel="noopener noreferrer">原文地址</a>
+</h1>
+<p>这一章节包含的内容应该可以帮助到您开始使用<code>Reactor Netty</code>，包含内容如下：</p>
+<ul>
+<li><a href="#21%e4%bb%8b%e7%bb%8dreactor-netty">介绍Reactor Netty</a>
+</li>
+<li><a href="#22%e5%89%8d%e6%8f%90%e6%9d%a1%e4%bb%b6">前提条件</a>
+</li>
+<li><a href="#23%e4%ba%86%e8%a7%a3bom%e5%92%8c%e7%89%88%e6%9c%ac%e6%96%b9%e6%a1%88">了解BOM和版本方案</a>
+</li>
+<li><a href="#24%e8%8e%b7%e5%8f%96reactor-netty">获取Reactor Netty</a>
+</li>
+</ul>
+<h1 id="21介绍reactor-netty">2.1.介绍Reactor Netty</h1>
+<p>适合于微服务架构，<code>Reactor Netty</code>为<code>HTTP</code>（包括Websocket），<code>TCP</code>和<code>UDP</code>提供了支持背压的网络引擎。</p>
+<h1 id="22前提条件">2.2.前提条件</h1>
+<p><code>Reactor Netty</code>需要运行在<code>Java 8</code>及以上的版本上。</p>
+<p>它需要依赖于以下组件：</p>
+<ul>
+<li>Reactive Streams v1.0.3</li>
+<li>Reactor Core v3.x</li>
+<li>Netty v4.1.x</li>
+</ul>
+<h1 id="23了解bom和版本方案">2.3.了解BOM和版本方案</h1>
+<p><code>Reactor Netty</code>是<code>Project Reactor BOM</code>的一部分（自从<code>Aluminium</code>
+发布以来）。这个设计好的列表将那些能更好的协同合作的artifacts进行分组，提供相关的版本，尽管这些artifacts中有可能有不同的版本方案。</p>
+<blockquote>
+<p>在0.9.x到1.0.x之间（Dysprosium 和 Europium），版本方案已经改变。</p>
+</blockquote>
+<p>Artifacts遵循<code>MAJOR.MINOR.PATCH-QUALIFIER</code>的版本方案，而POM则受CalVer的启发使用<code>YYYY.MINOR.PATCH-QUALIFIER</code>的版本方案，其中：</p>
+<ul>
+<li><code>MAJOR</code>是当前一代的Reactor，每一代新的Reactor都可能会给项目结构带来根本性的变化（意味着可能会有很重大的迁移工作）。</li>
+<li><code>YYYY</code>是在给定发布周期中第一次发布GA版本的年份。（例如1.0.x的1.0.0）</li>
+<li><code>.MINOR</code>是从0开始，每次新的发布周期则递增的数字
+<ul>
+<li>对于项目来说，一般会有比较大的改变，并且可能会有适度的迁移工作</li>
+<li>对于BOM来说，允许在两个同年首次发布的情况下区分发布周期</li>
+</ul>
+</li>
+<li><code>.PATCH</code>是从0开始，每次服务发布的时候递增的数字</li>
+<li><code>-QUALIFIER</code>是一个文本修饰词，在GA版本中被省略掉了（见下文）</li>
+</ul>
+<p>遵循这一惯例的第一发布周期是2020.0.x，代号<code>Europium</code>。该方案使用了以下限定词（注意使用破折号分隔），顺序如下：</p>
+<ul>
+<li><code>-M1..-M9</code>：里程碑（我们预计每次服务版本的发布不会超过9个）</li>
+<li><code>-RC1..-RC9</code>：候选版本（我们预计每次服务版本的发布不会超过9个）</li>
+<li><code>-SNAPSHOT</code>：快照</li>
+<li>没有GA版本发布的限定词</li>
+</ul>
+<blockquote>
+<p>快照在以上类型中是最先发布的，因为在任何PATCH里他们永远是”最新的预发行版本“。尽管一个PATCH周期第一个部署的artifact永远是一个 -SNAPSHOT ，相似的名字，但是更多最新的快照也会在一个里程碑之后发布或者两个候选版本之间发布。</p>
+</blockquote>
+<p>每个发布周期都有一个代号，延续之前的代号方案，可以在非正式的情况下使用（例如在讨论的时候，博客文章中等等）。这个代号代表着传统意义上的MAJOR.MINOR编号。他们（大多数）来自<a href="https://en.wikipedia.org/wiki/Periodic_table#Overview"target="_blank" rel="noopener noreferrer">元素周期表</a>
+
+，按字母顺序递增。</p>
+<blockquote>
+<p>直到Dysprosium，BOM的版本发布方案都是按照一个代号后面加上一个修饰符的方式，并且限定词只是稍微有所不一样。例如：Aluminium-RELEASE (第一个GA版，现在应该是像YYYY.0.1这样的), Bismuth-M1, Californium-SR1 (服务发布现在应该是像YYYY.0.1这样的), Dysprosium-RC1, Dysprosium-BUILD-SNAPSHOT (每次打完补丁之后，我们都会回到相同的快照版本。现在应该是像YYYY.0.X-SNAPSHOT这样的，所以我们每个PATCH一个快照)</p>
+</blockquote>
+<h1 id="24获取reactor-netty">2.4.获取Reactor Netty</h1>
+<p>正如我们<a href="#2.3.%e4%ba%86%e8%a7%a3BOM%e5%92%8c%e7%89%88%e6%9c%ac%e6%96%b9%e6%a1%88">之前提到</a>
+的，最简单的方式去使用<code>Reactor Netty</code>是去使用<code>BOM</code>并且在你的项目中添加相关的依赖。注意，当添加这种依赖关系的时候，不要指定版本，以便从BOM中获取版本。</p>
+<p>当然，如果你想强制使用指定的版本，你可以在添加依赖的时候指定你想用的版本。你也可以不使用BOM的方式，直接使用指定版本的依赖。</p>
+<h2 id="241maven安装">2.4.1.Maven安装</h2>
+<p>Maven本身就支持<code>BOM</code>。首先，你需要在<code>pom.xml</code>添加以下配置来引入<code>BOM</code>。如果pom中已经有<code>dependencyManagement</code>节点了，则只需要直接在里面添加配置。</p>
+<blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependencyManagement&gt;</span> <span style="color:#f92672">&lt;1&gt;</span>
+    <span style="color:#f92672">&lt;dependencies&gt;</span>
+        <span style="color:#f92672">&lt;dependency&gt;</span>
+            <span style="color:#f92672">&lt;groupId&gt;</span>io.projectreactor<span style="color:#f92672">&lt;/groupId&gt;</span>
+            <span style="color:#f92672">&lt;artifactId&gt;</span>reactor-bom<span style="color:#f92672">&lt;/artifactId&gt;</span>
+            <span style="color:#f92672">&lt;version&gt;</span>Dysprosium-SR10<span style="color:#f92672">&lt;/version&gt;</span> <span style="color:#f92672">&lt;2&gt;</span>
+            <span style="color:#f92672">&lt;type&gt;</span>pom<span style="color:#f92672">&lt;/type&gt;</span>
+            <span style="color:#f92672">&lt;scope&gt;</span>import<span style="color:#f92672">&lt;/scope&gt;</span>
+        <span style="color:#f92672">&lt;/dependency&gt;</span>
+    <span style="color:#f92672">&lt;/dependencies&gt;</span>
+<span style="color:#f92672">&lt;/dependencyManagement&gt;</span>
+</code></pre></div><p>&lt;1&gt; 注意<code>dependencyManagement</code>节点。这个是在<code>dependencies</code>节点之外的。</p>
+<p>&lt;2&gt; 截至写该文档的时候，<code>Dysprosium-SR10</code>是最新的<code>BOM</code>版本。访问https://github.com/reactor/reactor/releases 检查更新。</p>
+</blockquote>
+<p>接下来，在相关的响应式项目中添加依赖，像往常一样（除了没有<code>&lt;version&gt;</code>节点），如下：</p>
+<blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependencies&gt;</span>
+    <span style="color:#f92672">&lt;dependency&gt;</span>
+        <span style="color:#f92672">&lt;groupId&gt;</span>io.projectreactor.netty<span style="color:#f92672">&lt;/groupId&gt;</span>
+        <span style="color:#f92672">&lt;artifactId&gt;</span>reactor-netty-core<span style="color:#f92672">&lt;/artifactId&gt;</span> <span style="color:#f92672">&lt;1&gt;</span>
+        <span style="color:#f92672">&lt;2&gt;</span>
+    <span style="color:#f92672">&lt;/dependency&gt;</span>
+<span style="color:#f92672">&lt;/dependencies&gt;</span>
+<span style="color:#f92672">&lt;dependencies&gt;</span>
+    <span style="color:#f92672">&lt;dependency&gt;</span>
+        <span style="color:#f92672">&lt;groupId&gt;</span>io.projectreactor.netty<span style="color:#f92672">&lt;/groupId&gt;</span>
+        <span style="color:#f92672">&lt;artifactId&gt;</span>reactor-netty-http<span style="color:#f92672">&lt;/artifactId&gt;</span>
+    <span style="color:#f92672">&lt;/dependency&gt;</span>
+<span style="color:#f92672">&lt;/dependencies&gt;</span>
+</code></pre></div><p>&lt;1&gt; 添加<code>Reactor Netty</code>依赖</p>
+<p>&lt;2&gt; 没有version节点</p>
+</blockquote>
+<h2 id="242gradle安装">2.4.2.Gradle安装</h2>
+<p>从Gradle 5版本开始支持<code>BOM</code>。接下来展示了怎么去引入<code>BOM</code>并且添加<code>Reactor Netty</code>依赖：</p>
+<blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy">dependencies <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// import a BOM
+</span><span style="color:#75715e"></span>    implementation <span style="color:#a6e22e">platform</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;io.projectreactor:reactor-bom:Dysprosium-SR10&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1</span><span style="color:#f92672">&gt;</span>
+
+    <span style="color:#75715e">// define dependencies without versions
+</span><span style="color:#75715e"></span>    implementation <span style="color:#e6db74">&#39;io.projectreactor.netty:reactor-netty-core&#39;</span> <span style="color:#f92672">&lt;</span><span style="color:#ae81ff">2</span><span style="color:#f92672">&gt;</span>
+    implementation <span style="color:#e6db74">&#39;io.projectreactor.netty:reactor-netty-http&#39;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 截至写该文档的时候，<code>Dysprosium-SR10</code>是最新的<code>BOM</code>版本。访问https://github.com/reactor/reactor/releases 检查更新。</p>
+<p>&lt;2&gt; 这里没有第三部分：版本是单独的部分。从<code>BOM</code>中获取。</p>
+</blockquote>
+<h2 id="243里程碑和快照">2.4.3.里程碑和快照</h2>
+<p>里程碑和开发者预览版是通过<code>Spring Milestones</code>仓库而不是<code>Maven Central</code>来分发的。要将其添加到您的构建配置文件中，请使用以下代码段：</p>
+<blockquote>
+<p><code>Milestones in Maven</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;repositories&gt;</span>
+    <span style="color:#f92672">&lt;repository&gt;</span>
+        <span style="color:#f92672">&lt;id&gt;</span>spring-milestones<span style="color:#f92672">&lt;/id&gt;</span>
+        <span style="color:#f92672">&lt;name&gt;</span>Spring Milestones Repository<span style="color:#f92672">&lt;/name&gt;</span>
+        <span style="color:#f92672">&lt;url&gt;</span>https://repo.spring.io/milestone<span style="color:#f92672">&lt;/url&gt;</span>
+    <span style="color:#f92672">&lt;/repository&gt;</span>
+<span style="color:#f92672">&lt;/repositories&gt;</span>
+</code></pre></div></blockquote>
+<p>如果是<code>Gradle</code>，请使用以下代码段：</p>
+<blockquote>
+<p><code>Milestones in Gradle</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-groovy" data-lang="groovy">repositories <span style="color:#f92672">{</span>
+    maven <span style="color:#f92672">{</span> url <span style="color:#e6db74">&#39;https://repo.spring.io/milestone&#39;</span> <span style="color:#f92672">}</span>
+    mavenCentral<span style="color:#f92672">()</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<h1 id="25支持和政策">2.5.支持和政策</h1>
+<p>以下条目是镜像https://github.com/reactor/.github/blob/master/SUPPORT.adoc</p>
+<h2 id="251你是否还有问题">2.5.1.你是否还有问题？</h2>
+<blockquote>
+<p>首先在Stack Overflow中查看问题，如果有必要则开始讨论</p>
+</blockquote>
+<p>如果你确定为什么没有用，或者想知道是否有更好的方式去实现，请先在<code>Stack Overflow</code>上查看问题，如果有必要则开始讨论。使用如下的相关的标签：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/tagged/reactor-netty"target="_blank" rel="noopener noreferrer">reactor-netty</a>
+ 关于reactor-netty的问题</li>
+<li><a href="https://stackoverflow.com/questions/tagged/project-reactor"target="_blank" rel="noopener noreferrer">project-reactor</a>
+ 关于一般的响应式问题</li>
+</ul>
+<p>如果你更喜欢实时讨论的话，我们也有几个<code>Gitter 频道</code>：</p>
+<ul>
+<li><a href="https://gitter.im/reactor/reactor"target="_blank" rel="noopener noreferrer">reactor</a>
+ 历史上最活跃的一个，大多数社区都可以在这里提供帮助</li>
+<li><a href="https://gitter.im/reactor/reactor-core"target="_blank" rel="noopener noreferrer">reactor-core</a>
+ 针对内部代码库更高级的精确讨论</li>
+<li><a href="https://gitter.im/reactor/reactor-netty"target="_blank" rel="noopener noreferrer">reactor-netty</a>
+ 针对netty相关的问题</li>
+</ul>
+<p>参考每个项目的README文件来获取其他的信息来源。</p>
+<p>我们通常不鼓励通过创建GitHub issue来问问题，有利于上述两个频道。</p>
+<h2 id="252我们的弃用政策">2.5.2.我们的<code>弃用</code>政策</h2>
+<p>在处理弃用处理上，例如一个版本<code>A.B.C</code>，我们会确保：</p>
+<ul>
+<li>
+<p>在<code>A.B.0</code>版本中弃用的部分不会在<code>A.B+1.0</code>版本<code>之前</code>被删除</p>
+</li>
+<li>
+<p>在<code>A.B.1</code>版本中弃用的部分不会在<code>A.B+2.0</code>版本<code>之前</code>被删除</p>
+</li>
+<li>
+<p>我们会努力在废弃的javadoc中提及如下内容：</p>
+<ul>
+<li>被删除的最低版本</li>
+<li>指明不推荐使用的方法的替代方法</li>
+<li>方法被标记为弃用的版本</li>
+</ul>
+<blockquote>
+<p>本政策自2021年1月起正式实施，适用于<code>2020.0</code> BOMs和更新版本中的所有模块，以及<code>Dysprosium-SR15</code>之后的<code>Dysprosium</code>版本。</p>
+</blockquote>
+<blockquote>
+<p>删除弃用不是硬性承诺，并且被弃用的方法可能会比那些最小的GA版本存在的更久（意思是：只有问题最严重的被弃用的方法才会被及时删除）。</p>
+</blockquote>
+<blockquote>
+<p>也就是说，被弃用的代码过了需要被删除的最小版本之后，可能会在后续的任何版本中被删除 (包括补丁版本，也就是服务版本) ，并且不会在通知。所以使用者还是应该尽早的修改自己的代码。</p>
+</blockquote>
+</li>
+</ul>
+<p><a href="#2.%e5%85%a5%e9%97%a8%e6%8c%87%e5%8d%97">入门指南</a>
+的<a href="https://github.com/reactor/reactor-netty/edit/master/docs/asciidoc/getting-started.adoc"target="_blank" rel="noopener noreferrer">编辑</a>
+</p>
+<hr>
+<h2 id="目录contents-1"><a href="../contents">目录</a>
+</h2></article><section class="article labels"><a class="category" href=/categories/%E7%BF%BB%E8%AF%91/>翻译</a><a class="tag" href=/tags/reactor-netty/>reactor netty</a></section><section class="article author"><div class="details"><a class="item" href="https://github.com/immuthex" target="_blank" rel="noopener noreferrer"><span class="iconfont icon-github"></span>&nbsp;immuthex</a></div>
+</section>
+</div>
+<div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/reactor-netty-reference-guide/about-the-documentation/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 1.关于这个文档</a></p></section></div></section><section id="footer"><div class="footer-wrap">
+    <p class="copyright">©2021 Immuthex</p></div>
+</section></body>
+
+</html>
