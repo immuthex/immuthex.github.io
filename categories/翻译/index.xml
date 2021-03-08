@@ -23,7 +23,7 @@
 &lt;h1 id=&#34;原文地址httpsprojectreactoriodocsnettyreleasereferenceindexhtmltcp-server&#34;&gt;&lt;a href=&#34;https://projectreactor.io/docs/netty/release/reference/index.html#tcp-server&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;原文地址&lt;/a&gt;
 &lt;/h1&gt;
 &lt;p&gt;&lt;code&gt;Reactor Netty&lt;/code&gt;提供了易于使用和配置的&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpServer.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;TcpServer&lt;/code&gt;&lt;/a&gt;
- 。隐藏大部分Netty功能，例如：创建&lt;code&gt;TCP&lt;/code&gt;服务器，并增加了&lt;code&gt;Reactive Streams&lt;/code&gt;背压。&lt;/p&gt;
+ 。它隐藏了创建&lt;code&gt;TCP&lt;/code&gt;服务器所需的大部分&lt;code&gt;Netty&lt;/code&gt;的功能，并增加了&lt;code&gt;Reactive Streams&lt;/code&gt;背压。&lt;/p&gt;
 &lt;h1 id=&#34;31启动和停止&#34;&gt;3.1.启动和停止&lt;/h1&gt;
 &lt;p&gt;如果要启动一个&lt;code&gt;TCP&lt;/code&gt;服务器，您必须创建并且配置一个&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpServer.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;TcpServer&lt;/code&gt;&lt;/a&gt;
 实例对象。默认情况下，&lt;code&gt;host&lt;/code&gt;
