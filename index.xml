@@ -5,7 +5,7 @@
     <description>Recent content on Immuthex的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <copyright>©2021 Immuthex</copyright>
+    <copyright>©2021 immuthex</copyright>
     <lastBuildDate>Mon, 08 Mar 2021 20:26:10 +0800</lastBuildDate>
     
         <atom:link href="https://www.immuthex.com/index.xml" rel="self" type="application/rss+xml" />
@@ -26,7 +26,7 @@
  。隐藏大部分Netty功能，例如：创建&lt;code&gt;TCP&lt;/code&gt;服务器，并增加了&lt;code&gt;Reactive Streams&lt;/code&gt;背压。&lt;/p&gt;
 &lt;h1 id=&#34;31启动和停止&#34;&gt;3.1.启动和停止&lt;/h1&gt;
 &lt;p&gt;如果要启动一个&lt;code&gt;TCP&lt;/code&gt;服务器，您必须创建并且配置一个&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpServer.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;TcpServer&lt;/code&gt;&lt;/a&gt;
- 实例对象。默认情况下，&lt;code&gt;host&lt;/code&gt;
+实例对象。默认情况下，&lt;code&gt;host&lt;/code&gt;
 是配置为任何本地地址，当执行&lt;code&gt;bind&lt;/code&gt;操作的时候系统会选择一个临时端口。下面的例子展示了怎么创建并且配置一个&lt;code&gt;TcpServer&lt;/code&gt;实例：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/create/Application.java&lt;/p&gt;
@@ -45,12 +45,12 @@
 	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 创建一个&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpServer.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;TcpServer&lt;/code&gt;&lt;/a&gt;
- 实例用来做配置操作。&lt;/p&gt;
+实例用来做配置操作。&lt;/p&gt;
 &lt;p&gt;&amp;lt;2&amp;gt; 使用阻塞等待的方式启动服务器，直到初始化完成。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;返回的&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableServer.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;DisposableServer&lt;/code&gt;&lt;/a&gt;
- 提供了简单的服务器API，包括&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableChannel.html#disposeNow-java.time.Duration-&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;disposeNow()&lt;/code&gt;&lt;/a&gt;
- ，这个方法可以以阻塞等待的方式来关闭服务器。&lt;/p&gt;
+提供了简单的服务器API，包括&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableChannel.html#disposeNow-java.time.Duration-&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;disposeNow()&lt;/code&gt;&lt;/a&gt;
+，这个方法可以以阻塞等待的方式来关闭服务器。&lt;/p&gt;
 &lt;h2 id=&#34;311host和port&#34;&gt;3.1.1.Host和Port&lt;/h2&gt;
 &lt;p&gt;想要设置特定&lt;code&gt;host&lt;/code&gt;和&lt;code&gt;port&lt;/code&gt;，您可以用下面的方式来配置&lt;code&gt;TCP&lt;/code&gt;服务器：&lt;/p&gt;
 &lt;blockquote&gt;
@@ -107,7 +107,7 @@
 &lt;/blockquote&gt;
 &lt;h1 id=&#34;33写出数据&#34;&gt;3.3.写出数据&lt;/h1&gt;
 &lt;p&gt;如果要发送数据到一个已连接的客户端，您必须添加一个I/O处理器。这个I/O处理器可以通过&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/NettyOutbound.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;NettyOutbound&lt;/code&gt;&lt;/a&gt;
- 来写出数据。下面的例子展示了怎么添加一个I/O处理器：&lt;/p&gt;
+来写出数据。下面的例子展示了怎么添加一个I/O处理器：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/send/Application.java&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.core.publisher.Mono&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
@@ -130,7 +130,7 @@
 &lt;/blockquote&gt;
 &lt;h1 id=&#34;34消费数据&#34;&gt;3.4.消费数据&lt;/h1&gt;
 &lt;p&gt;如果要接收从连接的客户端发过来的数据，您必须添加一个I/O处理器。这个I/O处理器可以通过&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/NettyInbound.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;NettyInbound&lt;/code&gt;&lt;/a&gt;
- 来读取数据。下面的例子展示了怎么使用：&lt;/p&gt;
+来读取数据。下面的例子展示了怎么使用：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/read/Application.java&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.DisposableServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
@@ -283,9 +283,9 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启线路记录&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;默认情况下，线路记录在输出内容的时候会使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#HEX_DUMP&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#HEX_DUMP&lt;/a&gt;
- 。您也可以通过配置&lt;code&gt;TcpServer&lt;/code&gt;改为&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#SIMPLE&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#SIMPLE&lt;/a&gt;
- 或者&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#TEXTUAL&lt;/a&gt;
- ：&lt;/p&gt;
+。您也可以通过配置&lt;code&gt;TcpServer&lt;/code&gt;改为&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#SIMPLE&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#SIMPLE&lt;/a&gt;
+或者&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#TEXTUAL&lt;/a&gt;
+：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/wiretap/custom/Application.java&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.handler.logging.LogLevel&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
@@ -306,7 +306,7 @@
 	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启线路记录并使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#TEXTUAL&lt;/a&gt;
- 来输出内容。&lt;/p&gt;
+来输出内容。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;363使用event-loop-group&#34;&gt;3.6.3.使用Event Loop Group&lt;/h2&gt;
 &lt;p&gt;默认情况下，&lt;code&gt;TCP&lt;/code&gt;服务器使用一个&amp;quot;Event Loop Group&amp;quot;，工作线程数等于初始化的时候可以用的处理器数量（但是最小树是4）。您也可以使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/resources/LoopResources.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;LoopResource&lt;/a&gt;
@@ -369,9 +369,9 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
 &lt;h1 id=&#34;37ssl和tls&#34;&gt;3.7.SSL和TLS&lt;/h1&gt;
 &lt;p&gt;当您需要使用SSL或者TLS的时候，可以使用下面列出来方式进行配置。默认情况，如果&lt;code&gt;OpenSSL&lt;/code&gt;可用的话，则使用&lt;a href=&#34;https://netty.io/4.1/api/io/netty/handler/ssl/SslProvider.html#OPENSSL&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;SslProvider.OPENSSL&lt;/code&gt;&lt;/a&gt;
- 。否则使用&lt;a href=&#34;https://netty.io/4.1/api/io/netty/handler/ssl/SslProvider.html#JDK&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;SslProvider.JDK&lt;/code&gt;&lt;/a&gt;
- 。可以通过&lt;a href=&#34;https://netty.io/4.1/api/io/netty/handler/ssl/SslContextBuilder.html#sslProvider-io.netty.handler.ssl.SslProvider-&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;SslContextBuilder&lt;/code&gt;&lt;/a&gt;
- 或者设置&lt;code&gt;-Dio.netty.handler.ssl.noOpenSsl=true&lt;/code&gt;来进行切换。&lt;/p&gt;
+。否则使用&lt;a href=&#34;https://netty.io/4.1/api/io/netty/handler/ssl/SslProvider.html#JDK&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;SslProvider.JDK&lt;/code&gt;&lt;/a&gt;
+。可以通过&lt;a href=&#34;https://netty.io/4.1/api/io/netty/handler/ssl/SslContextBuilder.html#sslProvider-io.netty.handler.ssl.SslProvider-&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;SslContextBuilder&lt;/code&gt;&lt;/a&gt;
+或者设置&lt;code&gt;-Dio.netty.handler.ssl.noOpenSsl=true&lt;/code&gt;来进行切换。&lt;/p&gt;
 &lt;p&gt;下面的是使用&lt;code&gt;SslContextBuilder&lt;/code&gt;的例子：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/security/Application.java&lt;/p&gt;
@@ -610,8 +610,7 @@
 &lt;li&gt;Netty v4.1.x&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&#34;23了解bom和版本方案&#34;&gt;2.3.了解BOM和版本方案&lt;/h1&gt;
-&lt;p&gt;&lt;code&gt;Reactor Netty&lt;/code&gt;是&lt;code&gt;Project Reactor BOM&lt;/code&gt;的一部分（自从&lt;code&gt;Aluminium&lt;/code&gt;
-发布以来）。这个设计好的列表将那些能更好的协同合作的artifacts进行分组，提供相关的版本，尽管这些artifacts中有可能有不同的版本方案。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Reactor Netty&lt;/code&gt;是&lt;code&gt;Project Reactor BOM&lt;/code&gt;的一部分（自从&lt;code&gt;Aluminium&lt;/code&gt;发布以来）。这个设计好的列表将那些能更好的协同合作的artifacts进行分组，提供相关的版本，尽管这些artifacts中有可能有不同的版本方案。&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;在0.9.x到1.0.x之间（Dysprosium 和 Europium），版本方案已经改变。&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -639,7 +638,6 @@
 &lt;p&gt;快照在以上类型中是最先发布的，因为在任何PATCH里他们永远是”最新的预发行版本“。尽管一个PATCH周期第一个部署的artifact永远是一个 -SNAPSHOT ，相似的名字，但是更多最新的快照也会在一个里程碑之后发布或者两个候选版本之间发布。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;每个发布周期都有一个代号，延续之前的代号方案，可以在非正式的情况下使用（例如在讨论的时候，博客文章中等等）。这个代号代表着传统意义上的MAJOR.MINOR编号。他们（大多数）来自&lt;a href=&#34;https://en.wikipedia.org/wiki/Periodic_table#Overview&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;元素周期表&lt;/a&gt;
-
 ，按字母顺序递增。&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;直到Dysprosium，BOM的版本发布方案都是按照一个代号后面加上一个修饰符的方式，并且限定词只是稍微有所不一样。例如：Aluminium-RELEASE (第一个GA版，现在应该是像YYYY.0.1这样的), Bismuth-M1, Californium-SR1 (服务发布现在应该是像YYYY.0.1这样的), Dysprosium-RC1, Dysprosium-BUILD-SNAPSHOT (每次打完补丁之后，我们都会回到相同的快照版本。现在应该是像YYYY.0.X-SNAPSHOT这样的，所以我们每个PATCH一个快照)&lt;/p&gt;
@@ -663,7 +661,7 @@
     &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependencies&amp;gt;&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dependencyManagement&amp;gt;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 注意&lt;code&gt;dependencyManagement&lt;/code&gt;节点。这个是在&lt;code&gt;dependencies&lt;/code&gt;节点之外的。&lt;/p&gt;
-&lt;p&gt;&amp;lt;2&amp;gt; 截至写该文档的时候，&lt;code&gt;Dysprosium-SR10&lt;/code&gt;是最新的&lt;code&gt;BOM&lt;/code&gt;版本。访问https://github.com/reactor/reactor/releases 检查更新。&lt;/p&gt;
+&lt;p&gt;&amp;lt;2&amp;gt; 截至写该文档的时候，&lt;code&gt;Dysprosium-SR10&lt;/code&gt;是最新的&lt;code&gt;BOM&lt;/code&gt;版本。访问 &lt;a href=&#34;https://github.com/reactor/reactor/releases&#34;&gt;https://github.com/reactor/reactor/releases&lt;/a&gt; 检查更新。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;接下来，在相关的响应式项目中添加依赖，像往常一样（除了没有&lt;code&gt;&amp;lt;version&amp;gt;&lt;/code&gt;节点），如下：&lt;/p&gt;
 &lt;blockquote&gt;
@@ -694,7 +692,7 @@
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    implementation &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;io.projectreactor.netty:reactor-netty-core&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
     implementation &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;io.projectreactor.netty:reactor-netty-http&amp;#39;&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 截至写该文档的时候，&lt;code&gt;Dysprosium-SR10&lt;/code&gt;是最新的&lt;code&gt;BOM&lt;/code&gt;版本。访问https://github.com/reactor/reactor/releases 检查更新。&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 截至写该文档的时候，&lt;code&gt;Dysprosium-SR10&lt;/code&gt;是最新的&lt;code&gt;BOM&lt;/code&gt;版本。访问 &lt;a href=&#34;https://github.com/reactor/reactor/releases&#34;&gt;https://github.com/reactor/reactor/releases&lt;/a&gt; 检查更新。&lt;/p&gt;
 &lt;p&gt;&amp;lt;2&amp;gt; 这里没有第三部分：版本是单独的部分。从&lt;code&gt;BOM&lt;/code&gt;中获取。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;243里程碑和快照&#34;&gt;2.4.3.里程碑和快照&lt;/h2&gt;
@@ -726,18 +724,18 @@
 &lt;p&gt;如果你确定为什么没有用，或者想知道是否有更好的方式去实现，请先在&lt;code&gt;Stack Overflow&lt;/code&gt;上查看问题，如果有必要则开始讨论。使用如下的相关的标签：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/tagged/reactor-netty&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;reactor-netty&lt;/a&gt;
- 关于reactor-netty的问题&lt;/li&gt;
+关于reactor-netty的问题&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/tagged/project-reactor&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;project-reactor&lt;/a&gt;
- 关于一般的响应式问题&lt;/li&gt;
+关于一般的响应式问题&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;如果你更喜欢实时讨论的话，我们也有几个&lt;code&gt;Gitter 频道&lt;/code&gt;：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://gitter.im/reactor/reactor&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;reactor&lt;/a&gt;
- 历史上最活跃的一个，大多数社区都可以在这里提供帮助&lt;/li&gt;
+历史上最活跃的一个，大多数社区都可以在这里提供帮助&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://gitter.im/reactor/reactor-core&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;reactor-core&lt;/a&gt;
- 针对内部代码库更高级的精确讨论&lt;/li&gt;
+针对内部代码库更高级的精确讨论&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://gitter.im/reactor/reactor-netty&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;reactor-netty&lt;/a&gt;
- 针对netty相关的问题&lt;/li&gt;
+针对netty相关的问题&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;参考每个项目的README文件来获取其他的信息来源。&lt;/p&gt;
 &lt;p&gt;我们通常不鼓励通过创建GitHub issue来问问题，有利于上述两个频道。&lt;/p&gt;
@@ -764,7 +762,7 @@
 &lt;p&gt;删除弃用不是硬性承诺，并且被弃用的方法可能会比那些最小的GA版本存在的更久（意思是：只有问题最严重的被弃用的方法才会被及时删除）。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;也就是说，被弃用的代码过了需要被删除的最小版本之后，可能会在后续的任何版本中被删除 (包括补丁版本，也就是服务版本) ，并且不会在通知。所以使用者还是应该尽早的修改自己的代码。&lt;/p&gt;
+&lt;p&gt;也就是说，被弃用的代码过了需要被删除的最小版本之后，可能会在后续的任何版本中被删除（包括补丁版本，也就是服务版本），并且不会在通知。所以使用者还是应该尽早的修改自己的代码。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
@@ -788,31 +786,29 @@
 &lt;/h1&gt;
 &lt;p&gt;这一章节是关于&lt;code&gt;Reactor Netty&lt;/code&gt;参考文档的一些简要概述。你可以不用按照顺序阅读整个指南。每一个部分都是独立的，虽然经常会在某一部分引用其他的部分的内容。&lt;/p&gt;
 &lt;h1 id=&#34;11最新的版本和版权声明&#34;&gt;1.1.最新的版本和版权声明&lt;/h1&gt;
-&lt;p&gt;&lt;code&gt;Reactor Netty&lt;/code&gt;参考指南可以通过&lt;code&gt;HTML&lt;/code&gt;
-文档的形式提供访问。最新的副本可以访问这个网站 &lt;a href=&#34;https://projectreactor.io/docs/netty/release/reference/index.html&#34;&gt;https://projectreactor.io/docs/netty/release/reference/index.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Reactor Netty&lt;/code&gt;参考指南可以通过&lt;code&gt;HTML&lt;/code&gt;文档的形式提供访问。最新的副本可以访问这个网站 &lt;a href=&#34;https://projectreactor.io/docs/netty/release/reference/index.html&#34;&gt;https://projectreactor.io/docs/netty/release/reference/index.html&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;这个文档的副本可以供您自己使用或者提供给其他人使用，但是您不能对该副本收取任何费用并且不管的是印刷版还是电子版，每份副本中都必须包含这个&lt;code&gt;版权声明&lt;/code&gt;。&lt;/p&gt;
 &lt;h1 id=&#34;12贡献文档&#34;&gt;1.2.贡献文档&lt;/h1&gt;
 &lt;p&gt;这个参考指南是用&lt;code&gt;Asciidoc&lt;/code&gt;写的，您可以通访问 &lt;a href=&#34;https://github.com/reactor/reactor-netty/tree/master/docs/asciidoc&#34;&gt;https://github.com/reactor/reactor-netty/tree/master/docs/asciidoc&lt;/a&gt; 找到它的原始文件。&lt;/p&gt;
 &lt;p&gt;如果你有任何的改进，我们将很高兴收到您的pull request。&lt;/p&gt;
 &lt;p&gt;我们建议您检查一下版本库的本地副本，这样您就可以通过&lt;code&gt;asciidoctor&lt;/code&gt; Gradle任务和检查渲染来生成这个文档。有一些章节需要依赖于已包含的文件，所以&lt;code&gt;GitHub&lt;/code&gt;的渲染并不总是完整的。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;为了方便文档的编辑，大部分章节的末尾都有一个链接，可以直接在&lt;code&gt;GitHub&lt;/code&gt;上打开该章节的主源文件的编辑界面。这些链接只存在于这个文档的&lt;code&gt;HTML5&lt;/code&gt;版本中。他们看起来像这样的：&lt;a href=&#34;#1.%e5%85%b3%e4%ba%8e%e8%bf%99%e4%b8%aa%e6%96%87%e6%a1%a3&#34;&gt;关于这个文档&lt;/a&gt;
-的&lt;a href=&#34;https://github.com/reactor/reactor-netty/edit/master/docs/asciidoc/about-doc.adoc&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;编辑&lt;/a&gt;
+&lt;p&gt;为了方便文档的编辑，大部分章节的末尾都有一个链接，可以直接在&lt;code&gt;GitHub&lt;/code&gt;上打开该章节的主源文件的编辑界面。这些链接只存在于这个文档的&lt;code&gt;HTML5&lt;/code&gt;版本中。他们看起来像这样的：&lt;a href=&#34;https://github.com/reactor/reactor-netty/edit/master/docs/asciidoc/about-doc.adoc&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;编辑&lt;/a&gt;
 &lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h1 id=&#34;13-获得帮助&#34;&gt;1.3. 获得帮助&lt;/h1&gt;
 &lt;p&gt;您可以通过以下几种方式来获取有关&lt;code&gt;Reactor Netty&lt;/code&gt;的帮助：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;在&lt;a href=&#34;https://gitter.im/reactor/reactor-netty&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Gitter&lt;/a&gt;
- 和社区取得联系。&lt;/li&gt;
+和社区取得联系。&lt;/li&gt;
 &lt;li&gt;在stackoverflow.com的&lt;a href=&#34;https://github.com/reactor/reactor-netty/issues&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;reactor-netty&lt;/code&gt;&lt;/a&gt;
- 板块问问题。&lt;/li&gt;
+板块问问题。&lt;/li&gt;
 &lt;li&gt;在&lt;code&gt;Github&lt;/code&gt;的&lt;a href=&#34;https://github.com/reactor/reactor-netty/issues&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;reactor-netty&lt;/a&gt;
- 中提出错误。&lt;/li&gt;
+中提出错误。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;code&gt;Reactor Netty&lt;/code&gt;全部都是开源的，&lt;a href=&#34;https://github.com/reactor/reactor-netty/tree/master/docs/asciidoc&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;包括这个文档&lt;/a&gt;
- 。&lt;/p&gt;
+。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/edit/master/docs/asciidoc/about-doc.adoc&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;编辑&lt;/a&gt;
 &lt;/p&gt;
@@ -850,8 +846,7 @@
       <pubDate>Sun, 28 Feb 2021 11:49:00 +0800</pubDate>
       
       <guid>https://www.immuthex.com/posts/git-cherry-pick-tutorial/</guid>
-      <description>&lt;p&gt;在多分支开发的时候会有需要把一个分支的部分commit应用到其他的分支上，&lt;code&gt;git merge&lt;/code&gt;就满足不了这个需求了，这个时候就可以用&lt;code&gt;git cherry-pick&lt;/code&gt;
-，它的作用是选择已存在的commit应用到当前分支上，并产生新的commit SHA-1 校验和。下面是这个命令的图解示例。&lt;/p&gt;
+      <description>&lt;p&gt;在多分支开发的时候会有需要把一个分支的部分commit应用到其他的分支上，&lt;code&gt;git merge&lt;/code&gt;就满足不了这个需求了，这个时候就可以用&lt;code&gt;git cherry-pick&lt;/code&gt;，它的作用是选择已存在的commit应用到当前分支上，并产生新的commit SHA-1 校验和。下面是这个命令的图解示例。&lt;/p&gt;
 &lt;h1 id=&#34;图解示例&#34;&gt;图解示例&lt;/h1&gt;
 &lt;p&gt;如下有两个分支&lt;code&gt;master&lt;/code&gt;和&lt;code&gt;dev&lt;/code&gt;，从&lt;code&gt;C2&lt;/code&gt;开始两个分支开始有不同的commits。&lt;/p&gt;
 &lt;p&gt;&lt;img  src=&#34;https://www.immuthex.com/img/git-cherry-pick-tutorial/sample1.png&#34;
@@ -872,9 +867,7 @@
         alt=&#34;view files on both branch&#34;/&gt;&lt;/p&gt;
 &lt;p&gt;接下来我们把&lt;code&gt;dev&lt;/code&gt;分支的一些commits应用到&lt;code&gt;master&lt;/code&gt;分支：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;根据之前的终端记录或者通过&lt;code&gt;git log dev&lt;/code&gt;查看&lt;code&gt;C6&lt;/code&gt;的 SHA-1 校验和是&lt;code&gt;fca3793&lt;/code&gt;，在&lt;code&gt;master&lt;/code&gt;分支上执行&lt;code&gt;git cherry-pick fca3793&lt;/code&gt;，可以看到新增了一个 SHA-1
-校验和为&lt;code&gt;50982a2&lt;/code&gt;
-的commit并且在&lt;code&gt;master&lt;/code&gt;分支上多了一个C6文件。&lt;/li&gt;
+&lt;li&gt;根据之前的终端记录或者通过&lt;code&gt;git log dev&lt;/code&gt;查看&lt;code&gt;C6&lt;/code&gt;的 SHA-1 校验和是&lt;code&gt;fca3793&lt;/code&gt;，在&lt;code&gt;master&lt;/code&gt;分支上执行&lt;code&gt;git cherry-pick fca3793&lt;/code&gt;，可以看到新增了一个 SHA-1 校验和为&lt;code&gt;50982a2&lt;/code&gt;的commit并且在&lt;code&gt;master&lt;/code&gt;分支上多了一个C6文件。&lt;/li&gt;
 &lt;li&gt;执行&lt;code&gt;git cherry-pick d67e9f6 7bf5e7d&lt;/code&gt;之后，&lt;code&gt;master&lt;/code&gt;分支又多了C7，C8两个文件。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img  src=&#34;https://www.immuthex.com/img/git-cherry-pick-tutorial/do-cherry-pick.png&#34;
@@ -882,8 +875,7 @@
 &lt;h1 id=&#34;其他用法&#34;&gt;其他用法&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;如果想应用连续的多个commits还可以使用&lt;code&gt;git cherry-pick commit1..commitn&lt;/code&gt;，应用 SHA-1 校验和从&lt;code&gt;commit1&lt;/code&gt;到&lt;code&gt;commitn&lt;/code&gt;的commits，&lt;strong&gt;注意这里并不包含&lt;code&gt;commit1&lt;/code&gt;
-，如果需要包含可以执行&lt;code&gt;git cherry-pick commit1^..commitn&lt;/code&gt;&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;如果想应用连续的多个commits还可以使用&lt;code&gt;git cherry-pick commit1..commitn&lt;/code&gt;，应用 SHA-1 校验和从&lt;code&gt;commit1&lt;/code&gt;到&lt;code&gt;commitn&lt;/code&gt;的commits，&lt;strong&gt;注意这里并不包含&lt;code&gt;commit1&lt;/code&gt;，如果需要包含可以执行&lt;code&gt;git cherry-pick commit1^..commitn&lt;/code&gt;&lt;/strong&gt;。&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;如果只想把某一个分支最后一个commit应用到当前分支，可以直接使用&lt;code&gt;git cherry-pick branch-name&lt;/code&gt;，这个命令的效果是，将&lt;code&gt;branch-name&lt;/code&gt;分支最后一个commit应用到当前分支。&lt;/p&gt;
@@ -892,8 +884,7 @@
 &lt;p&gt;当然实际使用过程中，使用&lt;code&gt;cherry-pick&lt;/code&gt;可能会出现冲突，例如提示如下：
 &lt;img  src=&#34;https://www.immuthex.com/img/git-cherry-pick-tutorial/cherry-pick-conflict.png&#34;
         alt=&#34;cherry pick conflict&#34;/&gt;&lt;/p&gt;
-&lt;p&gt;解决冲突再执行&lt;code&gt;git add &amp;lt;paths&amp;gt;&lt;/code&gt;将文件标记为以解决冲突，或者执行&lt;code&gt;git rm &amp;lt;paths&amp;gt;&lt;/code&gt;直接从暂存区和工作区删除文件，最后执行&lt;code&gt;git cherry-pick --continue&lt;/code&gt;
-，则完成这次&lt;code&gt;cherry-pick&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;解决冲突再执行&lt;code&gt;git add &amp;lt;paths&amp;gt;&lt;/code&gt;将文件标记为以解决冲突，或者执行&lt;code&gt;git rm &amp;lt;paths&amp;gt;&lt;/code&gt;直接从暂存区和工作区删除文件，最后执行&lt;code&gt;git cherry-pick --continue&lt;/code&gt;，则完成这次&lt;code&gt;cherry-pick&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;如果想要取消这次的&lt;code&gt;cherry-pick&lt;/code&gt;操作可以执行&lt;code&gt;git cherry-pick --abort&lt;/code&gt;。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;</description>

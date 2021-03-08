@@ -36,8 +36,7 @@
 <li>Netty v4.1.x</li>
 </ul>
 <h1 id="23了解bom和版本方案">2.3.了解BOM和版本方案</h1>
-<p><code>Reactor Netty</code>是<code>Project Reactor BOM</code>的一部分（自从<code>Aluminium</code>
-发布以来）。这个设计好的列表将那些能更好的协同合作的artifacts进行分组，提供相关的版本，尽管这些artifacts中有可能有不同的版本方案。</p>
+<p><code>Reactor Netty</code>是<code>Project Reactor BOM</code>的一部分（自从<code>Aluminium</code>发布以来）。这个设计好的列表将那些能更好的协同合作的artifacts进行分组，提供相关的版本，尽管这些artifacts中有可能有不同的版本方案。</p>
 <blockquote>
 <p>在0.9.x到1.0.x之间（Dysprosium 和 Europium），版本方案已经改变。</p>
 </blockquote>
@@ -65,7 +64,6 @@
 <p>快照在以上类型中是最先发布的，因为在任何PATCH里他们永远是”最新的预发行版本“。尽管一个PATCH周期第一个部署的artifact永远是一个 -SNAPSHOT ，相似的名字，但是更多最新的快照也会在一个里程碑之后发布或者两个候选版本之间发布。</p>
 </blockquote>
 <p>每个发布周期都有一个代号，延续之前的代号方案，可以在非正式的情况下使用（例如在讨论的时候，博客文章中等等）。这个代号代表着传统意义上的MAJOR.MINOR编号。他们（大多数）来自<a href="https://en.wikipedia.org/wiki/Periodic_table#Overview"target="_blank" rel="noopener noreferrer">元素周期表</a>
-
 ，按字母顺序递增。</p>
 <blockquote>
 <p>直到Dysprosium，BOM的版本发布方案都是按照一个代号后面加上一个修饰符的方式，并且限定词只是稍微有所不一样。例如：Aluminium-RELEASE (第一个GA版，现在应该是像YYYY.0.1这样的), Bismuth-M1, Californium-SR1 (服务发布现在应该是像YYYY.0.1这样的), Dysprosium-RC1, Dysprosium-BUILD-SNAPSHOT (每次打完补丁之后，我们都会回到相同的快照版本。现在应该是像YYYY.0.X-SNAPSHOT这样的，所以我们每个PATCH一个快照)</p>
@@ -89,7 +87,7 @@
     <span style="color:#f92672">&lt;/dependencies&gt;</span>
 <span style="color:#f92672">&lt;/dependencyManagement&gt;</span>
 </code></pre></div><p>&lt;1&gt; 注意<code>dependencyManagement</code>节点。这个是在<code>dependencies</code>节点之外的。</p>
-<p>&lt;2&gt; 截至写该文档的时候，<code>Dysprosium-SR10</code>是最新的<code>BOM</code>版本。访问https://github.com/reactor/reactor/releases 检查更新。</p>
+<p>&lt;2&gt; 截至写该文档的时候，<code>Dysprosium-SR10</code>是最新的<code>BOM</code>版本。访问 <a href="https://github.com/reactor/reactor/releases">https://github.com/reactor/reactor/releases</a> 检查更新。</p>
 </blockquote>
 <p>接下来，在相关的响应式项目中添加依赖，像往常一样（除了没有<code>&lt;version&gt;</code>节点），如下：</p>
 <blockquote>
@@ -120,7 +118,7 @@
 </span><span style="color:#75715e"></span>    implementation <span style="color:#e6db74">&#39;io.projectreactor.netty:reactor-netty-core&#39;</span> <span style="color:#f92672">&lt;</span><span style="color:#ae81ff">2</span><span style="color:#f92672">&gt;</span>
     implementation <span style="color:#e6db74">&#39;io.projectreactor.netty:reactor-netty-http&#39;</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>&lt;1&gt; 截至写该文档的时候，<code>Dysprosium-SR10</code>是最新的<code>BOM</code>版本。访问https://github.com/reactor/reactor/releases 检查更新。</p>
+</code></pre></div><p>&lt;1&gt; 截至写该文档的时候，<code>Dysprosium-SR10</code>是最新的<code>BOM</code>版本。访问 <a href="https://github.com/reactor/reactor/releases">https://github.com/reactor/reactor/releases</a> 检查更新。</p>
 <p>&lt;2&gt; 这里没有第三部分：版本是单独的部分。从<code>BOM</code>中获取。</p>
 </blockquote>
 <h2 id="243里程碑和快照">2.4.3.里程碑和快照</h2>
@@ -152,18 +150,18 @@
 <p>如果你确定为什么没有用，或者想知道是否有更好的方式去实现，请先在<code>Stack Overflow</code>上查看问题，如果有必要则开始讨论。使用如下的相关的标签：</p>
 <ul>
 <li><a href="https://stackoverflow.com/questions/tagged/reactor-netty"target="_blank" rel="noopener noreferrer">reactor-netty</a>
- 关于reactor-netty的问题</li>
+关于reactor-netty的问题</li>
 <li><a href="https://stackoverflow.com/questions/tagged/project-reactor"target="_blank" rel="noopener noreferrer">project-reactor</a>
- 关于一般的响应式问题</li>
+关于一般的响应式问题</li>
 </ul>
 <p>如果你更喜欢实时讨论的话，我们也有几个<code>Gitter 频道</code>：</p>
 <ul>
 <li><a href="https://gitter.im/reactor/reactor"target="_blank" rel="noopener noreferrer">reactor</a>
- 历史上最活跃的一个，大多数社区都可以在这里提供帮助</li>
+历史上最活跃的一个，大多数社区都可以在这里提供帮助</li>
 <li><a href="https://gitter.im/reactor/reactor-core"target="_blank" rel="noopener noreferrer">reactor-core</a>
- 针对内部代码库更高级的精确讨论</li>
+针对内部代码库更高级的精确讨论</li>
 <li><a href="https://gitter.im/reactor/reactor-netty"target="_blank" rel="noopener noreferrer">reactor-netty</a>
- 针对netty相关的问题</li>
+针对netty相关的问题</li>
 </ul>
 <p>参考每个项目的README文件来获取其他的信息来源。</p>
 <p>我们通常不鼓励通过创建GitHub issue来问问题，有利于上述两个频道。</p>
@@ -190,7 +188,7 @@
 <p>删除弃用不是硬性承诺，并且被弃用的方法可能会比那些最小的GA版本存在的更久（意思是：只有问题最严重的被弃用的方法才会被及时删除）。</p>
 </blockquote>
 <blockquote>
-<p>也就是说，被弃用的代码过了需要被删除的最小版本之后，可能会在后续的任何版本中被删除 (包括补丁版本，也就是服务版本) ，并且不会在通知。所以使用者还是应该尽早的修改自己的代码。</p>
+<p>也就是说，被弃用的代码过了需要被删除的最小版本之后，可能会在后续的任何版本中被删除（包括补丁版本，也就是服务版本），并且不会在通知。所以使用者还是应该尽早的修改自己的代码。</p>
 </blockquote>
 </li>
 </ul>
@@ -202,7 +200,7 @@
 </section>
 </div>
 <div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/reactor-netty-reference-guide/tcp-server/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 3.TCP服务端</a></p><p><a class="link" href="/posts/reactor-netty-reference-guide/about-the-documentation/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 1.关于这个文档</a></p></section></div></section><section id="footer"><div class="footer-wrap">
-    <p class="copyright">©2021 Immuthex</p></div>
+    <p class="copyright">©2021 immuthex</p></div>
 </section></body>
 
 </html>

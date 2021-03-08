@@ -18,7 +18,7 @@
  。隐藏大部分Netty功能，例如：创建<code>TCP</code>服务器，并增加了<code>Reactive Streams</code>背压。</p>
 <h1 id="31启动和停止">3.1.启动和停止</h1>
 <p>如果要启动一个<code>TCP</code>服务器，您必须创建并且配置一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpServer.html"target="_blank" rel="noopener noreferrer"><code>TcpServer</code></a>
- 实例对象。默认情况下，<code>host</code>
+实例对象。默认情况下，<code>host</code>
 是配置为任何本地地址，当执行<code>bind</code>操作的时候系统会选择一个临时端口。下面的例子展示了怎么创建并且配置一个<code>TcpServer</code>实例：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/create/Application.java</p>
@@ -37,12 +37,12 @@
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>&lt;1&gt; 创建一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpServer.html"target="_blank" rel="noopener noreferrer"><code>TcpServer</code></a>
- 实例用来做配置操作。</p>
+实例用来做配置操作。</p>
 <p>&lt;2&gt; 使用阻塞等待的方式启动服务器，直到初始化完成。</p>
 </blockquote>
 <p>返回的<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableServer.html"target="_blank" rel="noopener noreferrer"><code>DisposableServer</code></a>
- 提供了简单的服务器API，包括<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableChannel.html#disposeNow-java.time.Duration-"target="_blank" rel="noopener noreferrer"><code>disposeNow()</code></a>
- ，这个方法可以以阻塞等待的方式来关闭服务器。</p>
+提供了简单的服务器API，包括<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableChannel.html#disposeNow-java.time.Duration-"target="_blank" rel="noopener noreferrer"><code>disposeNow()</code></a>
+，这个方法可以以阻塞等待的方式来关闭服务器。</p>
 <h2 id="311host和port">3.1.1.Host和Port</h2>
 <p>想要设置特定<code>host</code>和<code>port</code>，您可以用下面的方式来配置<code>TCP</code>服务器：</p>
 <blockquote>
@@ -99,7 +99,7 @@
 </blockquote>
 <h1 id="33写出数据">3.3.写出数据</h1>
 <p>如果要发送数据到一个已连接的客户端，您必须添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/NettyOutbound.html"target="_blank" rel="noopener noreferrer"><code>NettyOutbound</code></a>
- 来写出数据。下面的例子展示了怎么添加一个I/O处理器：</p>
+来写出数据。下面的例子展示了怎么添加一个I/O处理器：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/send/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
@@ -122,7 +122,7 @@
 </blockquote>
 <h1 id="34消费数据">3.4.消费数据</h1>
 <p>如果要接收从连接的客户端发过来的数据，您必须添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/NettyInbound.html"target="_blank" rel="noopener noreferrer"><code>NettyInbound</code></a>
- 来读取数据。下面的例子展示了怎么使用：</p>
+来读取数据。下面的例子展示了怎么使用：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/read/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.DisposableServer<span style="color:#f92672">;</span>
@@ -275,9 +275,9 @@
 </code></pre></div><p>&lt;1&gt; 开启线路记录</p>
 </blockquote>
 <p>默认情况下，线路记录在输出内容的时候会使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#HEX_DUMP"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#HEX_DUMP</a>
- 。您也可以通过配置<code>TcpServer</code>改为<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#SIMPLE"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#SIMPLE</a>
- 或者<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#TEXTUAL</a>
- ：</p>
+。您也可以通过配置<code>TcpServer</code>改为<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#SIMPLE"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#SIMPLE</a>
+或者<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#TEXTUAL</a>
+：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/wiretap/custom/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.logging.LogLevel<span style="color:#f92672">;</span>
@@ -298,7 +298,7 @@
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>&lt;1&gt; 开启线路记录并使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#TEXTUAL</a>
- 来输出内容。</p>
+来输出内容。</p>
 </blockquote>
 <h2 id="363使用event-loop-group">3.6.3.使用Event Loop Group</h2>
 <p>默认情况下，<code>TCP</code>服务器使用一个&quot;Event Loop Group&quot;，工作线程数等于初始化的时候可以用的处理器数量（但是最小树是4）。您也可以使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/resources/LoopResources.html"target="_blank" rel="noopener noreferrer">LoopResource</a>
@@ -361,9 +361,9 @@
 </code></pre></div></blockquote>
 <h1 id="37ssl和tls">3.7.SSL和TLS</h1>
 <p>当您需要使用SSL或者TLS的时候，可以使用下面列出来方式进行配置。默认情况，如果<code>OpenSSL</code>可用的话，则使用<a href="https://netty.io/4.1/api/io/netty/handler/ssl/SslProvider.html#OPENSSL"target="_blank" rel="noopener noreferrer"><code>SslProvider.OPENSSL</code></a>
- 。否则使用<a href="https://netty.io/4.1/api/io/netty/handler/ssl/SslProvider.html#JDK"target="_blank" rel="noopener noreferrer"><code>SslProvider.JDK</code></a>
- 。可以通过<a href="https://netty.io/4.1/api/io/netty/handler/ssl/SslContextBuilder.html#sslProvider-io.netty.handler.ssl.SslProvider-"target="_blank" rel="noopener noreferrer"><code>SslContextBuilder</code></a>
- 或者设置<code>-Dio.netty.handler.ssl.noOpenSsl=true</code>来进行切换。</p>
+。否则使用<a href="https://netty.io/4.1/api/io/netty/handler/ssl/SslProvider.html#JDK"target="_blank" rel="noopener noreferrer"><code>SslProvider.JDK</code></a>
+。可以通过<a href="https://netty.io/4.1/api/io/netty/handler/ssl/SslContextBuilder.html#sslProvider-io.netty.handler.ssl.SslProvider-"target="_blank" rel="noopener noreferrer"><code>SslContextBuilder</code></a>
+或者设置<code>-Dio.netty.handler.ssl.noOpenSsl=true</code>来进行切换。</p>
 <p>下面的是使用<code>SslContextBuilder</code>的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/security/Application.java</p>
@@ -570,7 +570,7 @@
 </section>
 </div>
 <div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/reactor-netty-reference-guide/getting-started/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 2.入门指南</a></p></section></div></section><section id="footer"><div class="footer-wrap">
-    <p class="copyright">©2021 Immuthex</p></div>
+    <p class="copyright">©2021 immuthex</p></div>
 </section></body>
 
 </html>

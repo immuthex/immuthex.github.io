@@ -9,8 +9,7 @@
                 class="iconfont icon-github"></span>&nbsp;Github</a>
     </nav>
 </div></span></div></section><section id="content"><div class="article-container"><section class="article header">
-    <h1 class="article title">git cherry-pick 教程</h1><p class="article date">2021-02-28</p></section><article class="article markdown-body"><p>在多分支开发的时候会有需要把一个分支的部分commit应用到其他的分支上，<code>git merge</code>就满足不了这个需求了，这个时候就可以用<code>git cherry-pick</code>
-，它的作用是选择已存在的commit应用到当前分支上，并产生新的commit SHA-1 校验和。下面是这个命令的图解示例。</p>
+    <h1 class="article title">git cherry-pick 教程</h1><p class="article date">2021-02-28</p></section><article class="article markdown-body"><p>在多分支开发的时候会有需要把一个分支的部分commit应用到其他的分支上，<code>git merge</code>就满足不了这个需求了，这个时候就可以用<code>git cherry-pick</code>，它的作用是选择已存在的commit应用到当前分支上，并产生新的commit SHA-1 校验和。下面是这个命令的图解示例。</p>
 <h1 id="图解示例">图解示例</h1>
 <p>如下有两个分支<code>master</code>和<code>dev</code>，从<code>C2</code>开始两个分支开始有不同的commits。</p>
 <p><img  src="/img/git-cherry-pick-tutorial/sample1.png"
@@ -31,9 +30,7 @@
         alt="view files on both branch"/></p>
 <p>接下来我们把<code>dev</code>分支的一些commits应用到<code>master</code>分支：</p>
 <ul>
-<li>根据之前的终端记录或者通过<code>git log dev</code>查看<code>C6</code>的 SHA-1 校验和是<code>fca3793</code>，在<code>master</code>分支上执行<code>git cherry-pick fca3793</code>，可以看到新增了一个 SHA-1
-校验和为<code>50982a2</code>
-的commit并且在<code>master</code>分支上多了一个C6文件。</li>
+<li>根据之前的终端记录或者通过<code>git log dev</code>查看<code>C6</code>的 SHA-1 校验和是<code>fca3793</code>，在<code>master</code>分支上执行<code>git cherry-pick fca3793</code>，可以看到新增了一个 SHA-1 校验和为<code>50982a2</code>的commit并且在<code>master</code>分支上多了一个C6文件。</li>
 <li>执行<code>git cherry-pick d67e9f6 7bf5e7d</code>之后，<code>master</code>分支又多了C7，C8两个文件。</li>
 </ul>
 <p><img  src="/img/git-cherry-pick-tutorial/do-cherry-pick.png"
@@ -41,8 +38,7 @@
 <h1 id="其他用法">其他用法</h1>
 <ul>
 <li>
-<p>如果想应用连续的多个commits还可以使用<code>git cherry-pick commit1..commitn</code>，应用 SHA-1 校验和从<code>commit1</code>到<code>commitn</code>的commits，<strong>注意这里并不包含<code>commit1</code>
-，如果需要包含可以执行<code>git cherry-pick commit1^..commitn</code></strong>。</p>
+<p>如果想应用连续的多个commits还可以使用<code>git cherry-pick commit1..commitn</code>，应用 SHA-1 校验和从<code>commit1</code>到<code>commitn</code>的commits，<strong>注意这里并不包含<code>commit1</code>，如果需要包含可以执行<code>git cherry-pick commit1^..commitn</code></strong>。</p>
 </li>
 <li>
 <p>如果只想把某一个分支最后一个commit应用到当前分支，可以直接使用<code>git cherry-pick branch-name</code>，这个命令的效果是，将<code>branch-name</code>分支最后一个commit应用到当前分支。</p>
@@ -51,15 +47,14 @@
 <p>当然实际使用过程中，使用<code>cherry-pick</code>可能会出现冲突，例如提示如下：
 <img  src="/img/git-cherry-pick-tutorial/cherry-pick-conflict.png"
         alt="cherry pick conflict"/></p>
-<p>解决冲突再执行<code>git add &lt;paths&gt;</code>将文件标记为以解决冲突，或者执行<code>git rm &lt;paths&gt;</code>直接从暂存区和工作区删除文件，最后执行<code>git cherry-pick --continue</code>
-，则完成这次<code>cherry-pick</code>。</p>
+<p>解决冲突再执行<code>git add &lt;paths&gt;</code>将文件标记为以解决冲突，或者执行<code>git rm &lt;paths&gt;</code>直接从暂存区和工作区删除文件，最后执行<code>git cherry-pick --continue</code>，则完成这次<code>cherry-pick</code>。</p>
 <p>如果想要取消这次的<code>cherry-pick</code>操作可以执行<code>git cherry-pick --abort</code>。</p>
 </li>
 </ul></article><section class="article labels"><a class="tag" href=/tags/git/>git</a></section><section class="article license">版权声明：如需转载，请带上本文链接、注明来源和本声明。否则将追究法律责任。https://www.immuthex.com/posts/git-cherry-pick-tutorial/</section><section class="article author"><div class="details"><a class="item" href="https://github.com/immuthex" target="_blank" rel="noopener noreferrer"><span class="iconfont icon-github"></span>&nbsp;immuthex</a></div>
 </section>
 </div>
 <div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/reactor-netty-reference-guide/contents/"><span class="iconfont icon-article"></span>Reactor Netty参考指南</a></p></section></div></section><section id="footer"><div class="footer-wrap">
-    <p class="copyright">©2021 Immuthex</p></div>
+    <p class="copyright">©2021 immuthex</p></div>
 </section></body>
 
 </html>
