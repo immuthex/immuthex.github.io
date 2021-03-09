@@ -490,14 +490,14 @@
 <blockquote>
 <p>当您期望负载很高时，需要谨慎使用一个最大连接数很高的连接池。因为您可以会遇到<code>reactor.netty.http.client.PrematureCloseException</code>异常，其根本原因是太多并发连接的opened/acquired操作导致的&quot;Connect Timeout&quot;。</p>
 </blockquote>
-<h2 id="471指标">4.7.1.指标</h2>
+<h2 id="471度量">4.7.1.度量</h2>
 <p>池化的<code>ConnectionProvider</code>提供了与<a href="https://micrometer.io/"target="_blank" rel="noopener noreferrer">Micrometer</a>
-的内建集成。它暴露了所有前缀为<code>reactor.netty.connection.provider</code>的指标。</p>
-<p>池化的<code>ConnectionProvider</code>指标</p>
+的内建集成。它暴露了所有前缀为<code>reactor.netty.connection.provider</code>的度量。</p>
+<p>池化的<code>ConnectionProvider</code>度量</p>
 <table>
 <thead>
 <tr>
-<th>指标名称</th>
+<th>度量名称</th>
 <th>类型</th>
 <th>描述</th>
 </tr>
@@ -525,7 +525,7 @@
 </tr>
 </tbody>
 </table>
-<p>下面的例子展示了怎么开启集成的指标：</p>
+<p>下面的例子展示了怎么开启集成的度量：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/pool/metrics/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
@@ -638,14 +638,14 @@
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div></blockquote>
-<h1 id="410指标">4.10.指标</h1>
+<h1 id="410度量">4.10.度量</h1>
 <p>TCP客户端支持与<a href="https://micrometer.io/"target="_blank" rel="noopener noreferrer">Micrometer</a>
-的内置集成。它暴露了所有前缀为<code>reactor.netty.tcp.client</code>的指标。</p>
-<p>下面的表格提供了TCP客户端指标的相关信息：</p>
+的内置集成。它暴露了所有前缀为<code>reactor.netty.tcp.client</code>的度量。</p>
+<p>下面的表格提供了TCP客户端度量的相关信息：</p>
 <table>
 <thead>
 <tr>
-<th>指标名称</th>
+<th>度量名称</th>
 <th>类型</th>
 <th>描述</th>
 </tr>
@@ -683,12 +683,12 @@
 </tr>
 </tbody>
 </table>
-<p>下面额外的指标也是可用的：</p>
-<p>池化的<code>ConnectionProvider</code>指标</p>
+<p>下面额外的度量也是可用的：</p>
+<p>池化的<code>ConnectionProvider</code>度量</p>
 <table>
 <thead>
 <tr>
-<th>指标名称</th>
+<th>度量名称</th>
 <th>类型</th>
 <th>描述</th>
 </tr>
@@ -716,11 +716,11 @@
 </tr>
 </tbody>
 </table>
-<p><code>ByteBufAllocator</code>指标</p>
+<p><code>ByteBufAllocator</code>度量</p>
 <table>
 <thead>
 <tr>
-<th>指标名称</th>
+<th>度量名称</th>
 <th>类型</th>
 <th>描述</th>
 </tr>
@@ -773,7 +773,7 @@
 </tr>
 </tbody>
 </table>
-<p>下面的例子展示了怎么开启集成的指标：</p>
+<p>下面的例子展示了怎么开启集成的度量：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/metrics/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
@@ -795,7 +795,7 @@
 <span style="color:#f92672">}</span>
 </code></pre></div><p>&lt;1&gt; 开启内建集成的Micrometer</p>
 </blockquote>
-<p>如果您想让TCP客户端指标与除了<code>Micrometer</code>之外的系统集成或者想提供自己与<code>Micrometer</code>的集成来添加自己的指标记录器，您可以按如下方式实现：</p>
+<p>如果您想让TCP客户端度量与除了<code>Micrometer</code>之外的系统集成或者想提供自己与<code>Micrometer</code>的集成来添加自己的度量记录器，您可以按如下方式实现：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/metrics/custom/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
@@ -818,7 +818,7 @@
 		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
 		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
 	<span style="color:#f92672">}</span>
-</code></pre></div><p>&lt;1&gt; 开启TCP客户端指标并且提供<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/channel/ChannelMetricsRecorder.html"target="_blank" rel="noopener noreferrer"><code>ChannelMetricsRecorder</code></a>
+</code></pre></div><p>&lt;1&gt; 开启TCP客户端度量并且提供<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/channel/ChannelMetricsRecorder.html"target="_blank" rel="noopener noreferrer"><code>ChannelMetricsRecorder</code></a>
 的实现。</p>
 </blockquote>
 <h1 id="411unix域套接字">4.11.Unix域套接字</h1>
