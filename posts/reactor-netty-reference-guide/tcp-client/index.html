@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.81.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 4.TCP客户端&nbsp;&ndash;&nbsp;Immuthex的博客</title><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Reactor Netty参考指南 - 4.TCP客户端" /><body><section id="header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Immuthex的博客</span></a></span>
+        <span class="header right-side"><div class="nav wrap">
+    <nav class="nav"><a class="nav item" href="/categories/">分类</a><a class="nav item" href="/tags/">标签</a><a class="nav item" href="https://github.com/immuthex" target="_blank" one-link-mark="yes"><span
+                class="iconfont icon-github"></span>&nbsp;Github</a>
+    </nav>
+</div></span></div></section><section id="content"><div class="article-container"><section class="article header">
+    <h1 class="article title">Reactor Netty参考指南 - 4.TCP客户端</h1><p class="article date">2021-03-09</p></section><article class="article markdown-body"><h2 id="目录contents"><a href="../contents">目录</a>
+</h2>
+<hr>
+<h1 id="原文地址httpsprojectreactoriodocsnettyreleasereferenceindexhtmltcp-client"><a href="https://projectreactor.io/docs/netty/release/reference/index.html#tcp-client"target="_blank" rel="noopener noreferrer">原文地址</a>
+</h1>
+<p>Reactor Netty提供了易于使用、易于配置的<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpClient.html"target="_blank" rel="noopener noreferrer"><code>TcpClient</code></a>
+。它隐藏了创建<code>TCP</code>客户端所需的大部分<code>Netty</code>的功能，并增加了<code>Reactive Streams</code>背压。</p>
+<h1 id="41连接和断开">4.1.连接和断开</h1>
+<p>要将<code>TCP</code>客户端连接到给定的端点，您必须创建并且配置一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpClient.html"target="_blank" rel="noopener noreferrer"><code>TcpClient</code></a>
+实例。默认情况下，<code>host</code>为<code>localhost</code>，<code>post</code>为<code>12012</code>。下面的例子展示了怎么创建一个<code>TcpClient</code>：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/create/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>      <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span> <span style="color:#75715e">//&lt;2&gt;
+</span><span style="color:#75715e"></span>
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 创建一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpClient.html"target="_blank" rel="noopener noreferrer"><code>TcpClient</code></a>
+实例用来进行的配置操作。</p>
+<p>&lt;2&gt; 用阻塞的方式进行连接操作，并且等待它初始化完成。</p>
+</blockquote>
+<p>返回的<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/Connection.html"target="_blank" rel="noopener noreferrer"><code>Connection</code></a>
+对象提供了简单的连接相关的API，包括<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableChannel.html#disposeNow-java.time.Duration-"target="_blank" rel="noopener noreferrer"><code>disposeNow()</code></a>
+，调用这个方法会以阻塞的方式关闭客户端。</p>
+<h2 id="411host和port">4.1.1.Host和Port</h2>
+<p>想要连接特定的<code>host</code>和<code>port</code>，您可以使用以下方式来配置<code>TCP</code>客户端。下面的例子展示了怎么来做：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/address/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>            <span style="color:#75715e">//&lt;2&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 配置<code>TCP</code>的host</p>
+<p>&lt;2&gt; 配置<code>TCP</code>的port</p>
+</blockquote>
+<h1 id="42直接初始化">4.2.直接初始化</h1>
+<p>默认情况下，<code>TcpClient</code>初始化资源的操作在需要使用的时候才进行。这意味着初始化加载的时候<code>connect operation</code>会占用额外的时间：</p>
+<ul>
+<li>
+<p>事件循环组</p>
+</li>
+<li>
+<p>主机名解析器</p>
+</li>
+<li>
+<p>native传输库（当使用了native传输的时候）</p>
+</li>
+<li>
+<p>用于安全性的native库（使用了<code>OpenSsl</code>的时候）</p>
+</li>
+</ul>
+<p>当您需要预加载这些资源的时候，您可以按照以下方式来配置<code>TcpClient</code>：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/warmup/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		TcpClient tcpClient <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">handle</span><span style="color:#f92672">((</span>inbound<span style="color:#f92672">,</span> outbound<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> outbound<span style="color:#f92672">.</span><span style="color:#a6e22e">sendString</span><span style="color:#f92672">(</span>Mono<span style="color:#f92672">.</span><span style="color:#a6e22e">just</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hello&#34;</span><span style="color:#f92672">)));</span>
+
+		tcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">warmup</span><span style="color:#f92672">()</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>		         <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+
+		Connection connection <span style="color:#f92672">=</span> tcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span> <span style="color:#75715e">//&lt;2&gt;
+</span><span style="color:#75715e"></span>
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 初始化和加载事件循环组，主机名解析器，native传输库和用于安全性的native库</p>
+<p>&lt;2&gt; 在连接远程节点的时候会进行主机名解析</p>
+</blockquote>
+<h1 id="43写出数据">4.3.写出数据</h1>
+<p>如果要发送数据到一个已有的端点，您必须添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/NettyOutbound.html"target="_blank" rel="noopener noreferrer"><code>NettyOutbound</code></a>
+来写出数据。</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/send/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">handle</span><span style="color:#f92672">((</span>inbound<span style="color:#f92672">,</span> outbound<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> outbound<span style="color:#f92672">.</span><span style="color:#a6e22e">sendString</span><span style="color:#f92672">(</span>Mono<span style="color:#f92672">.</span><span style="color:#a6e22e">just</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hello&#34;</span><span style="color:#f92672">)))</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 发送<code>hello</code>字符串给这个端点。</p>
+</blockquote>
+<h1 id="44消费数据">4.4.消费数据</h1>
+<p>如果要接收从已有端点发过来的数据，您必须添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/NettyInbound.html"target="_blank" rel="noopener noreferrer"><code>NettyInbound</code></a>
+来读取数据。下面的例子展示了怎么使用：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/read/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">handle</span><span style="color:#f92672">((</span>inbound<span style="color:#f92672">,</span> outbound<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> inbound<span style="color:#f92672">.</span><span style="color:#a6e22e">receive</span><span style="color:#f92672">().</span><span style="color:#a6e22e">then</span><span style="color:#f92672">())</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 接收从已有端点发送过来的数据</p>
+</blockquote>
+<h1 id="45生命周期回调">4.5.生命周期回调</h1>
+<p>下面的生命周期回调用参数是提供给您用来扩展<code>TcpClient</code>的：</p>
+<table>
+<thead>
+<tr>
+<th>Callback</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>doAfterResolve</code></td>
+<td>在成功解析远程地址之后调用。</td>
+</tr>
+<tr>
+<td><code>doOnChannelInit</code></td>
+<td>在初始化channel的时候调用。</td>
+</tr>
+<tr>
+<td><code>doOnConnect</code></td>
+<td>当channel将要连接的时候调用。</td>
+</tr>
+<tr>
+<td><code>doOnConnected</code></td>
+<td>当channel已经连接上的时候调用。</td>
+</tr>
+<tr>
+<td><code>doOnDisconnected</code></td>
+<td>当channel断开的时候被调用。</td>
+</tr>
+<tr>
+<td><code>doOnResolve</code></td>
+<td>当远程地址将要被解析的时候被调用。</td>
+</tr>
+<tr>
+<td><code>doOnResolveError</code></td>
+<td>在远程地址解析失败的情况下被调用。</td>
+</tr>
+</tbody>
+</table>
+<p>下面的例子展示了怎么使用<code>doOnConnected</code>和<code>doOnChannelInit</code>回调：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/lifecycle/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.logging.LoggingHandler<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> io.netty.handler.timeout.ReadTimeoutHandler<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.util.concurrent.TimeUnit<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">doOnConnected</span><span style="color:#f92672">(</span>conn <span style="color:#f92672">-&gt;</span>
+				             conn<span style="color:#f92672">.</span><span style="color:#a6e22e">addHandler</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ReadTimeoutHandler<span style="color:#f92672">(</span>10<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">SECONDS</span><span style="color:#f92672">)))</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">doOnChannelInit</span><span style="color:#f92672">((</span>observer<span style="color:#f92672">,</span> channel<span style="color:#f92672">,</span> remoteAddress<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+				             channel<span style="color:#f92672">.</span><span style="color:#a6e22e">pipeline</span><span style="color:#f92672">()</span>
+				                    <span style="color:#f92672">.</span><span style="color:#a6e22e">addFirst</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> LoggingHandler<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;reactor.netty.examples&#34;</span><span style="color:#f92672">)))</span><span style="color:#75715e">//&lt;2&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 当channel已连接的时候<code>ReadTimeoutHandler</code>扩展了<code>Netty</code> pipeline。</p>
+<p>&lt;2&gt; 当初始化channel的时候<code>LoggingHandler</code>扩展了<code>Netty</code> pipeline。</p>
+</blockquote>
+<h1 id="46tcp层面的配置">4.6.TCP层面的配置</h1>
+<p>这一章节描述了三种TCP层面的配置方式：</p>
+<ul>
+<li><a href="#461channel-options">Channel Options</a>
+</li>
+<li><a href="#462wire-logger">Wire Logger</a>
+</li>
+<li><a href="#463event-loop-group">Event Loop Group</a>
+</li>
+</ul>
+<h2 id="461channel-options">4.6.1.Channel Options</h2>
+<p>默认情况下，<code>TCP</code>客户端配置了以下options：</p>
+<blockquote>
+<p>./../../reactor-netty-core/src/main/java/reactor/netty/tcp/TcpClientConnect.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">TcpClientConnect<span style="color:#f92672">(</span>ConnectionProvider provider<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">config</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TcpClientConfig<span style="color:#f92672">(</span>
+        provider<span style="color:#f92672">,</span>
+        Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">singletonMap</span><span style="color:#f92672">(</span>ChannelOption<span style="color:#f92672">.</span><span style="color:#a6e22e">AUTO_READ</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">),</span>
+        <span style="color:#f92672">()</span> <span style="color:#f92672">-&gt;</span> AddressUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">createUnresolved</span><span style="color:#f92672">(</span>NetUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">LOCALHOST</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getHostAddress</span><span style="color:#f92672">(),</span> DEFAULT_PORT<span style="color:#f92672">));</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<p>如果需要添加新的option或者修改已有的option，您可以使用如下的方式：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/channeloptions/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.ChannelOption<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">option</span><span style="color:#f92672">(</span>ChannelOption<span style="color:#f92672">.</span><span style="color:#a6e22e">CONNECT_TIMEOUT_MILLIS</span><span style="color:#f92672">,</span> 10000<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<p>您可以通过以下的链接找到更多关于<code>Netty</code>channel options的信息：</p>
+<ul>
+<li><a href="https://netty.io/4.1/api/io/netty/channel/ChannelOption.html"target="_blank" rel="noopener noreferrer">ChannelOption</a>
+</li>
+<li><a href="https://docs.oracle.com/javase/8/docs/technotes/guides/net/socketOpt.html"target="_blank" rel="noopener noreferrer">Socket Options</a>
+</li>
+</ul>
+<h1 id="462wire-logger">4.6.2.Wire Logger</h1>
+<p>Reactor Netty提供了线路记录（wire logging）用来检查点对点的流量。默认情况下，线路记录是关闭的。如果想要开启它，您必须将日志<code>reactor.netty.tcp.TcpClient</code>的设置为<code>DEBUG</code>等级并且按如下方式进行配置：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/wiretap/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">wiretap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 开启线路记录</p>
+</blockquote>
+<p>默认情况下，线路记录在输出内容的时候会使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#HEX_DUMP"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#HEX_DUMP</a>
+。您也可以通过配置<code>TcpClient</code>改为<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#SIMPLE"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#SIMPLE</a>
+或者<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#TEXTUAL</a>
+：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/wiretap/custom/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.logging.LogLevel<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.transport.logging.AdvancedByteBufFormat<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">wiretap</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;logger-name&#34;</span><span style="color:#f92672">,</span> LogLevel<span style="color:#f92672">.</span><span style="color:#a6e22e">DEBUG</span><span style="color:#f92672">,</span> AdvancedByteBufFormat<span style="color:#f92672">.</span><span style="color:#a6e22e">TEXTUAL</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 开启线路记录并使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#TEXTUAL</a>
+来输出内容。</p>
+</blockquote>
+<h2 id="463event-loop-group">4.6.3.Event Loop Group</h2>
+<p>默认情况下，<code>TCP</code>客户端使用一个&quot;Event Loop Group&quot;，工作线程数等于初始化的时候可以用的处理器数量（但最小是4）。您也可以使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/resources/LoopResources.html"target="_blank" rel="noopener noreferrer">LoopResource</a>
+<code>#server</code>其中的一个方法来修改配置。</p>
+<p>默认的<code>Event Loop Group</code>配置如下：</p>
+<blockquote>
+<p>./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default worker thread count, fallback to available processor
+</span><span style="color:#75715e"> * (but with a minimum value of 4)
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String IO_WORKER_COUNT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.ioWorkerCount&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default selector thread count, fallback to -1 (no selector thread)
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String IO_SELECT_COUNT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.ioSelectCount&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default worker thread count for UDP, fallback to available processor
+</span><span style="color:#75715e"> * (but with a minimum value of 4)
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String UDP_IO_THREAD_COUNT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.udp.ioThreadCount&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default quiet period that guarantees that the disposal of the underlying LoopResources
+</span><span style="color:#75715e"> * will not happen, fallback to 2 seconds.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String SHUTDOWN_QUIET_PERIOD <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.ioShutdownQuietPeriod&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default maximum amount of time to wait until the disposal of the underlying LoopResources
+</span><span style="color:#75715e"> * regardless if a task was submitted during the quiet period, fallback to 15 seconds.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String SHUTDOWN_TIMEOUT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.ioShutdownTimeout&#34;</span><span style="color:#f92672">;</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default value whether the native transport (epoll, kqueue) will be preferred,
+</span><span style="color:#75715e"> * fallback it will be preferred when available
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String NATIVE <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.native&#34;</span><span style="color:#f92672">;</span>
+</code></pre></div></blockquote>
+<p>如果需要修改这些设置，您也可以通过如下方式进行配置：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/eventloop/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.resources.LoopResources<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		LoopResources loop <span style="color:#f92672">=</span> LoopResources<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;event-loop&#34;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> 4<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">runOn</span><span style="color:#f92672">(</span>loop<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<h1 id="47连接池">4.7.连接池</h1>
+<p>默认情况下，<code>TCP</code>客户端使用一个&quot;固定的&quot;的连接池，最大的channel数量是500，待处理队列中最大的获取注册请求数为<code>1000</code>（其余配置请查看下面的系统属性）。这意味着，如果有人尝试从池中获取一个channel，但是池中没有可用的channel则会创建一个新的channel。当池中的channel数量达到了最大值时，新的获取channel的操作会被延迟，直到一个可用的channel再次返回到池中。</p>
+<blockquote>
+<p>./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default max connections. Fallback to
+</span><span style="color:#75715e"> * available number of processors (but with a minimum value of 16)
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String POOL_MAX_CONNECTIONS <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.pool.maxConnections&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default acquisition timeout (milliseconds) before error. If -1 will never wait to
+</span><span style="color:#75715e"> * acquire before opening a new
+</span><span style="color:#75715e"> * connection in an unbounded fashion. Fallback 45 seconds
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String POOL_ACQUIRE_TIMEOUT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.pool.acquireTimeout&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default max idle time, fallback - max idle time is not specified.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String POOL_MAX_IDLE_TIME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.pool.maxIdleTime&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default max life time, fallback - max life time is not specified.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String POOL_MAX_LIFE_TIME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.pool.maxLifeTime&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default leasing strategy (fifo, lifo), fallback to fifo.
+</span><span style="color:#75715e"> * &lt;ul&gt;
+</span><span style="color:#75715e"> *     &lt;li&gt;fifo - The connection selection is first in, first out&lt;/li&gt;
+</span><span style="color:#75715e"> *     &lt;li&gt;lifo - The connection selection is last in, first out&lt;/li&gt;
+</span><span style="color:#75715e"> * &lt;/ul&gt;
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String POOL_LEASING_STRATEGY <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.pool.leasingStrategy&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default {@code getPermitsSamplingRate} (between 0d and 1d (percentage))
+</span><span style="color:#75715e"> * to be used with a {@link SamplingAllocationStrategy}.
+</span><span style="color:#75715e"> * This strategy wraps a {@link PoolBuilder#sizeBetween(int, int) sizeBetween} {@link AllocationStrategy}
+</span><span style="color:#75715e"> * and samples calls to {@link AllocationStrategy#getPermits(int)}.
+</span><span style="color:#75715e"> * Fallback - sampling is not enabled.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String POOL_GET_PERMITS_SAMPLING_RATE <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.pool.getPermitsSamplingRate&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default {@code returnPermitsSamplingRate} (between 0d and 1d (percentage))
+</span><span style="color:#75715e"> * to be used with a {@link SamplingAllocationStrategy}.
+</span><span style="color:#75715e"> * This strategy wraps a {@link PoolBuilder#sizeBetween(int, int) sizeBetween} {@link AllocationStrategy}
+</span><span style="color:#75715e"> * and samples calls to {@link AllocationStrategy#returnPermits(int)}.
+</span><span style="color:#75715e"> * Fallback - sampling is not enabled.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String POOL_RETURN_PERMITS_SAMPLING_RATE <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.pool.returnPermitsSamplingRate&#34;</span><span style="color:#f92672">;</span>
+</code></pre></div></blockquote>
+<p>如果您需要禁用连接池，您可以使用如下配置：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/pool/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">newConnection</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<p>如果您需要为连接池中的channel设置一个特定的空闲时间，您可以使用如下配置：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/pool/config/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.resources.ConnectionProvider<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		ConnectionProvider provider <span style="color:#f92672">=</span>
+				ConnectionProvider<span style="color:#f92672">.</span><span style="color:#a6e22e">builder</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">)</span>
+				                  <span style="color:#f92672">.</span><span style="color:#a6e22e">maxConnections</span><span style="color:#f92672">(</span>50<span style="color:#f92672">)</span>
+				                  <span style="color:#f92672">.</span><span style="color:#a6e22e">pendingAcquireTimeout</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofMillis</span><span style="color:#f92672">(</span>30000<span style="color:#f92672">))</span>
+				                  <span style="color:#f92672">.</span><span style="color:#a6e22e">maxIdleTime</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofMillis</span><span style="color:#f92672">(</span>60<span style="color:#f92672">))</span>
+				                  <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">(</span>provider<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<blockquote>
+<p>当您期望负载很高时，需要谨慎使用一个最大连接数很高的连接池。因为您可以会遇到<code>reactor.netty.http.client.PrematureCloseException</code>异常，其根本原因是太多并发连接的opened/acquired操作导致的&quot;Connect Timeout&quot;。</p>
+</blockquote>
+<h2 id="471指标">4.7.1.指标</h2>
+<p>池化的<code>ConnectionProvider</code>提供了与<a href="https://micrometer.io/"target="_blank" rel="noopener noreferrer">Micrometer</a>
+的内建集成。它暴露了所有前缀为<code>reactor.netty.connection.provider</code>的指标。</p>
+<p>池化的<code>ConnectionProvider</code>指标</p>
+<table>
+<thead>
+<tr>
+<th>指标名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reactor.netty.connection.provider.total.connections</td>
+<td>Gauge</td>
+<td>所有连接的数，包括活跃的和空闲的</td>
+</tr>
+<tr>
+<td>reactor.netty.connection.provider.active.connections</td>
+<td>Gauge</td>
+<td>已经被成功获取了并且正在使用的连接数</td>
+</tr>
+<tr>
+<td>reactor.netty.connection.provider.idle.connections</td>
+<td>Gauge</td>
+<td>空闲的连接数</td>
+</tr>
+<tr>
+<td>reactor.netty.connection.provider.pending.connections</td>
+<td>Gauge</td>
+<td>正在等待可用连接的请求数</td>
+</tr>
+</tbody>
+</table>
+<p>下面的例子展示了怎么开启集成的指标：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/pool/metrics/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.resources.ConnectionProvider<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		ConnectionProvider provider <span style="color:#f92672">=</span>
+				ConnectionProvider<span style="color:#f92672">.</span><span style="color:#a6e22e">builder</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;fixed&#34;</span><span style="color:#f92672">)</span>
+				                  <span style="color:#f92672">.</span><span style="color:#a6e22e">maxConnections</span><span style="color:#f92672">(</span>50<span style="color:#f92672">)</span>
+				                  <span style="color:#f92672">.</span><span style="color:#a6e22e">metrics</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				                  <span style="color:#f92672">.</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">(</span>provider<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 开启内建集成的Micrometer</p>
+</blockquote>
+<h1 id="48ssl和tls">4.8.SSL和TLS</h1>
+<p>当您需要使用SSL或者TLS的时候，可以使用下面列出来方式进行配置。默认情况，如果<code>OpenSSL</code>可用的话，则使用<a href="https://netty.io/4.1/api/io/netty/handler/ssl/SslProvider.html#OPENSSL"target="_blank" rel="noopener noreferrer"><code>SslProvider.OPENSSL</code></a>
+。否则使用<a href="https://netty.io/4.1/api/io/netty/handler/ssl/SslProvider.html#JDK"target="_blank" rel="noopener noreferrer"><code>SslProvider.JDK</code></a>
+。可以通过<a href="https://netty.io/4.1/api/io/netty/handler/ssl/SslContextBuilder.html#sslProvider-io.netty.handler.ssl.SslProvider-"target="_blank" rel="noopener noreferrer"><code>SslContextBuilder</code></a>
+或者设置<code>-Dio.netty.handler.ssl.noOpenSsl=true</code>来进行切换。</p>
+<p>下面的是使用<code>SslContextBuilder</code>的例子：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/security/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.ssl.SslContextBuilder<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		SslContextBuilder sslContextBuilder <span style="color:#f92672">=</span> SslContextBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">forClient</span><span style="color:#f92672">();</span>
+
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>443<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">secure</span><span style="color:#f92672">(</span>spec <span style="color:#f92672">-&gt;</span> spec<span style="color:#f92672">.</span><span style="color:#a6e22e">sslContext</span><span style="color:#f92672">(</span>sslContextBuilder<span style="color:#f92672">))</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<h1 id="481服务器名称标识">4.8.1.服务器名称标识</h1>
+<p>默认情况下，TCP客户端将远程主机名作为SNI服务器名发送。当您需要修改默认设置的时候，您可以通过如下方式配置<code>TCP</code>客户端：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/sni/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.ssl.SslContext<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> io.netty.handler.ssl.SslContextBuilder<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> javax.net.ssl.SNIHostName<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
+		SslContext sslContext <span style="color:#f92672">=</span> SslContextBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">forClient</span><span style="color:#f92672">().</span><span style="color:#a6e22e">build</span><span style="color:#f92672">();</span>
+
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;127.0.0.1&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>8080<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">secure</span><span style="color:#f92672">(</span>spec <span style="color:#f92672">-&gt;</span> spec<span style="color:#f92672">.</span><span style="color:#a6e22e">sslContext</span><span style="color:#f92672">(</span>sslContext<span style="color:#f92672">)</span>
+				                             <span style="color:#f92672">.</span><span style="color:#a6e22e">serverNames</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> SNIHostName<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;test.com&#34;</span><span style="color:#f92672">)))</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<h1 id="49代理支持">4.9.代理支持</h1>
+<p>TCP客户端支持Netty提供的代理功能，并通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/ProxyProvider.html"target="_blank" rel="noopener noreferrer">ProxyProvider</a>
+构建器提供了一种特定的&quot;非代理主机&quot;的方式。下面的例子展示了怎么使用<code>ProxyProvider</code>：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/proxy/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.transport.ProxyProvider<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">proxy</span><span style="color:#f92672">(</span>spec <span style="color:#f92672">-&gt;</span> spec<span style="color:#f92672">.</span><span style="color:#a6e22e">type</span><span style="color:#f92672">(</span>ProxyProvider<span style="color:#f92672">.</span><span style="color:#a6e22e">Proxy</span><span style="color:#f92672">.</span><span style="color:#a6e22e">SOCKS4</span><span style="color:#f92672">)</span>
+				                            <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;proxy&#34;</span><span style="color:#f92672">)</span>
+				                            <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>8080<span style="color:#f92672">)</span>
+				                            <span style="color:#f92672">.</span><span style="color:#a6e22e">nonProxyHosts</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;localhost&#34;</span><span style="color:#f92672">))</span>
+				        <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<h1 id="410指标">4.10.指标</h1>
+<p>TCP客户端支持与<a href="https://micrometer.io/"target="_blank" rel="noopener noreferrer">Micrometer</a>
+的内置集成。它暴露了所有前缀为<code>reactor.netty.tcp.client</code>的指标。</p>
+<p>下面的表格提供了TCP客户端指标的相关信息：</p>
+<table>
+<thead>
+<tr>
+<th>指标名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reactor.netty.tcp.client.data.received</td>
+<td>DistributionSummary</td>
+<td>收到的数据量，以字节为单位</td>
+</tr>
+<tr>
+<td>reactor.netty.tcp.client.data.sent</td>
+<td>DistributionSummary</td>
+<td>发送的数据量，以字节为单位</td>
+</tr>
+<tr>
+<td>reactor.netty.tcp.client.errors</td>
+<td>Counter</td>
+<td>发生的错误数量</td>
+</tr>
+<tr>
+<td>reactor.netty.tcp.client.tls.handshake.time</td>
+<td>Timer</td>
+<td>TLS握手所花费的时间</td>
+</tr>
+<tr>
+<td>reactor.netty.tcp.client.connect.time</td>
+<td>Timer</td>
+<td>连接远程地址所花费的时间</td>
+</tr>
+<tr>
+<td>reactor.netty.tcp.client.address.resolver</td>
+<td>Timer</td>
+<td>解析远程地址花费的时间</td>
+</tr>
+</tbody>
+</table>
+<p>下面额外的指标也是可用的：</p>
+<p>池化的<code>ConnectionProvider</code>指标</p>
+<table>
+<thead>
+<tr>
+<th>指标名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reactor.netty.connection.provider.total.connections</td>
+<td>Gauge</td>
+<td>所有连接的数，包括活跃的和空闲的</td>
+</tr>
+<tr>
+<td>reactor.netty.connection.provider.active.connections</td>
+<td>Gauge</td>
+<td>已经被成功获取了并且正在使用的连接数</td>
+</tr>
+<tr>
+<td>reactor.netty.connection.provider.idle.connections</td>
+<td>Gauge</td>
+<td>空闲的连接数</td>
+</tr>
+<tr>
+<td>reactor.netty.connection.provider.pending.connections</td>
+<td>Gauge</td>
+<td>正在等待可用连接的请求数</td>
+</tr>
+</tbody>
+</table>
+<p><code>ByteBufAllocator</code>指标</p>
+<table>
+<thead>
+<tr>
+<th>指标名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.heap.memory</td>
+<td>Gauge</td>
+<td>堆内存的字节数</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.direct.memory</td>
+<td>Gauge</td>
+<td>堆外内存的字节数</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.heap.arenas</td>
+<td>Gauge</td>
+<td>堆内存的个数（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.direct.arenas</td>
+<td>Gauge</td>
+<td>堆外内存的个数（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.threadlocal.caches</td>
+<td>Gauge</td>
+<td>threadlocal的缓存数量（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.tiny.cache.size</td>
+<td>Gauge</td>
+<td>微小缓存的大小（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.small.cache.size</td>
+<td>Gauge</td>
+<td>小缓存的大小（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.normal.cache.size</td>
+<td>Gauge</td>
+<td>一般缓存的大小（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.chunk.size</td>
+<td>Gauge</td>
+<td>一个区域的块大小（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+</tbody>
+</table>
+<p>下面的例子展示了怎么开启集成的指标：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/metrics/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">metrics</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 开启内建集成的Micrometer</p>
+</blockquote>
+<p>如果您想让TCP客户端指标与除了<code>Micrometer</code>之外的系统集成或者想提供自己与<code>Micrometer</code>的集成来添加自己的指标记录器，您可以按如下方式实现：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/metrics/custom/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.channel.ChannelMetricsRecorder<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.net.SocketAddress<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">metrics</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> CustomChannelMetricsRecorder<span style="color:#f92672">::</span><span style="color:#66d9ef">new</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 开启TCP客户端指标并且提供<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/channel/ChannelMetricsRecorder.html"target="_blank" rel="noopener noreferrer"><code>ChannelMetricsRecorder</code></a>
+的实现。</p>
+</blockquote>
+<h1 id="411unix域套接字">4.11.Unix域套接字</h1>
+<p>当使用本地传输时，<code>TCP</code>服务器支持Unix域套接字（UDS）。</p>
+<p>下面展示了怎么使用UDS：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/uds/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.unix.DomainSocketAddress<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">remoteAddress</span><span style="color:#f92672">(()</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">new</span> DomainSocketAddress<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/tmp/test.sock&#34;</span><span style="color:#f92672">))</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 指定将使用的<code>DomainSocketAddress</code></p>
+</blockquote>
+<h1 id="412主机名解析">4.12.主机名解析</h1>
+<p>默认情况下，<code>TcpClient</code>使用Netty的域名查询机制来异步解析域名。用来替代JVM内置阻塞解析器。</p>
+<p>当您需要修改默认设置的时候，您可以像如下通过配置<code>TcpClient</code>来实现：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/resolver/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">resolver</span><span style="color:#f92672">(</span>spec <span style="color:#f92672">-&gt;</span> spec<span style="color:#f92672">.</span><span style="color:#a6e22e">queryTimeout</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofMillis</span><span style="color:#f92672">(</span>500<span style="color:#f92672">)))</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 解析器每次执行DNS查询的超时时间设置为500ms。</p>
+</blockquote>
+<p>下面的列表展示了可用的配置：</p>
+<table>
+<thead>
+<tr>
+<th>配置名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cacheMaxTimeToLive</code></td>
+<td>DNS资源记录缓存的最大存活时间（单位：秒）。如果DNS服务器返回的DNS资源记录的存活时间大于这个最大存活时间。该解析器将忽略来自DNS服务器的存活时间，并使用这个最大存活时间。默认为<code>Integer.MAX_VALUE</code></td>
+</tr>
+<tr>
+<td><code>cacheMinTimeToLive</code></td>
+<td>DNS资源记录缓存的最小存活时间（单位：秒）。如果 DNS 服务器返回的 DNS 资源记录的存活时间小于这个最小存活时间，则此解析器将忽略来自DNS服务器的存活时间并使用这个最小存活时间。默认：0。</td>
+</tr>
+<tr>
+<td><code>cacheNegativeTimeToLive</code></td>
+<td>DNS查询失败的缓存时间（单位：秒）。默认：0。</td>
+</tr>
+<tr>
+<td><code>disableOptionalRecord</code></td>
+<td>禁用自动包含的可选设置，该设置会试图告诉远程DNS服务器解析器每次响应可以读取多少数据。默认情况下，该设置为启用状态。</td>
+</tr>
+<tr>
+<td><code>disableRecursionDesired</code></td>
+<td>用于指定该解析器在查询DNS的时候会不会带上期望递归查询（RD）的标志，默认情况下，该设置为启用状态。</td>
+</tr>
+<tr>
+<td><code>maxPayloadSize</code></td>
+<td>设置数据报包缓冲区的容量（单位：字节）。 默认：4096</td>
+</tr>
+<tr>
+<td><code>maxQueriesPerResolve</code></td>
+<td>设置解析主机名允许发送的最大DNS查询次数。默认：16</td>
+</tr>
+<tr>
+<td><code>ndots</code></td>
+<td>设置在进行初始化绝对查询的时候，名称中必须出现的点的数量。默认值：-1（用于判断Unix操作系统的值，否则使用1）。</td>
+</tr>
+<tr>
+<td><code>queryTimeout</code></td>
+<td>设置该解析器每次DNS查询的超时时间（单位：毫秒）。默认：5000</td>
+</tr>
+<tr>
+<td><code>resolvedAddressTypes</code></td>
+<td>解析地址的协议族列表。</td>
+</tr>
+<tr>
+<td><code>roundRobinSelection</code></td>
+<td>启用<a href="https://netty.io/4.1/api/io/netty/resolver/dns/DnsNameResolver.html"target="_blank" rel="noopener noreferrer"><code>DnsNameResolver</code></a>
+的<a href="https://netty.io/4.1/api/io/netty/resolver/AddressResolverGroup.html"target="_blank" rel="noopener noreferrer"><code>AddressResolverGroup</code></a>
+，用于当命名服务器提供了多个地址的时候支持随机选择目标地址。参见<a href="https://netty.io/4.1/api/io/netty/resolver/dns/RoundRobinDnsAddressResolverGroup.html"target="_blank" rel="noopener noreferrer"><code>RoundRobinDnsAddressResolverGroup</code></a>
+。默认：<a href="https://netty.io/4.1/api/io/netty/resolver/dns/DnsAddressResolverGroup.html"target="_blank" rel="noopener noreferrer"><code>DnsAddressResolverGroup</code></a>
+。</td>
+</tr>
+<tr>
+<td><code>runOn</code></td>
+<td>在给定的<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/resources/LoopResources.html"target="_blank" rel="noopener noreferrer"><code>LoopResources</code></a>
+上执行与DNS服务器的通信。默认情况下，LoopResources只在客户端上被使用。</td>
+</tr>
+<tr>
+<td><code>searchDomains</code></td>
+<td>解析器的搜索域列表。默认情况下，有效搜索域列表是使用的系统DNS搜索域。</td>
+</tr>
+<tr>
+<td><code>trace</code></td>
+<td>在解析器在解析失败时生成详细的跟踪信息时使用的日志记录器和日志级别。</td>
+</tr>
+</tbody>
+</table>
+<p>有时候，您或许想切换为JVM内建的解析器。您可以通过如下配置<code>TcpClient</code>的方式来实现：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/resolver/custom/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.resolver.DefaultAddressResolverGroup<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpClient<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection connection <span style="color:#f92672">=</span>
+				TcpClient<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;example.com&#34;</span><span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>80<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">resolver</span><span style="color:#f92672">(</span>DefaultAddressResolverGroup<span style="color:#f92672">.</span><span style="color:#a6e22e">INSTANCE</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">connectNow</span><span style="color:#f92672">();</span>
+
+		connection<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 设置为JVM内建的解析器。</p>
+</blockquote>
+<p><a href="https://github.com/reactor/reactor-netty/edit/master/docs/asciidoc/tcp-client.adoc"target="_blank" rel="noopener noreferrer">Suggest Edit</a>
+ to &ldquo;<a href="https://projectreactor.io/docs/netty/release/reference/index.html#tcp-client"target="_blank" rel="noopener noreferrer">TCP Client</a>
+&rdquo;</p>
+<hr>
+<h2 id="目录contents-1"><a href="../contents">目录</a>
+</h2></article><section class="article labels"><a class="category" href=/categories/%E7%BF%BB%E8%AF%91/>翻译</a><a class="tag" href=/tags/reactor-netty/>reactor netty</a></section><section class="article license">版权声明：如需转载，请带上本文链接、注明来源和本声明。否则将追究法律责任。https://www.immuthex.com/posts/reactor-netty-reference-guide/tcp-client/</section><section class="article author"><div class="details"><a class="item" href="https://github.com/immuthex" target="_blank" rel="noopener noreferrer"><span class="iconfont icon-github"></span>&nbsp;immuthex</a></div>
+</section>
+</div>
+<div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/reactor-netty-reference-guide/tcp-server/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 3.TCP服务端</a></p></section></div></section><section id="footer"><div class="footer-wrap">
+    <p class="copyright">©2021 immuthex</p></div>
+</section></body>
+
+</html>
