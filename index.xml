@@ -3927,7 +3927,9 @@ hello
       <guid>https://www.immuthex.com/posts/reactor-netty-reference-guide/contents/</guid>
       <description>&lt;h1 id=&#34;原文地址httpsprojectreactoriodocsnettyreleasereferenceindexhtml&#34;&gt;&lt;a href=&#34;https://projectreactor.io/docs/netty/release/reference/index.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;原文地址&lt;/a&gt;
 &lt;/h1&gt;
-&lt;p&gt;原作者：Stephane Maldini(@smaldini) Violeta Georgieva(@violeta_g_g)&lt;/p&gt;
+&lt;p&gt;原作者：Stephane Maldini(&lt;a href=&#34;https://twitter.com/smaldini&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;@smaldini&lt;/a&gt;
+) Violeta Georgieva(&lt;a href=&#34;https://twitter.com/violeta_g_g&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;@violeta_g_g&lt;/a&gt;
+)&lt;/p&gt;
 &lt;p&gt;版本 1.0.4&lt;/p&gt;
 &lt;h1 id=&#34;1关于这个文档about-the-documentation&#34;&gt;&lt;a href=&#34;../about-the-documentation&#34;&gt;1.关于这个文档&lt;/a&gt;
 &lt;/h1&gt;
