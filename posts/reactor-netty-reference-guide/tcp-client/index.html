@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.81.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 4.TCP客户端&nbsp;&ndash;&nbsp;Immuthex的博客</title><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
+<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 4.TCP客户端&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第四章（TCP客户端）的中文翻译" /><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Reactor Netty参考指南 - 4.TCP客户端" /><body><section id="header">
     <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Immuthex的博客</span></a></span>
         <span class="header right-side"><div class="nav wrap">
@@ -65,7 +65,7 @@
 </code></pre></div><p>&lt;1&gt; 配置<code>TCP</code>的host</p>
 <p>&lt;2&gt; 配置<code>TCP</code>的port</p>
 </blockquote>
-<h1 id="42直接初始化">4.2.直接初始化</h1>
+<h1 id="42预先初始化">4.2.预先初始化</h1>
 <p>默认情况下，<code>TcpClient</code>初始化资源的操作在需要使用的时候才进行。这意味着初始化加载的时候<code>connect operation</code>会占用额外的时间：</p>
 <ul>
 <li>
@@ -225,8 +225,8 @@
 		          <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>&lt;1&gt; 当channel已连接的时候<code>ReadTimeoutHandler</code>扩展了<code>Netty</code> pipeline。</p>
-<p>&lt;2&gt; 当初始化channel的时候<code>LoggingHandler</code>扩展了<code>Netty</code> pipeline。</p>
+</code></pre></div><p>&lt;1&gt; 当一个远程客户端连接的时候添加了一个<code>ReadTimeoutHandler</code>到<code>Netty</code> pipeline。</p>
+<p>&lt;2&gt; 当初始化channel的时候添加了一个<code>LoggingHandler</code>到<code>Netty</code> pipeline。</p>
 </blockquote>
 <h1 id="46tcp层面的配置">4.6.TCP层面的配置</h1>
 <p>这一章节描述了三种TCP层面的配置方式：</p>

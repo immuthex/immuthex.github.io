@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.81.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 3.TCP服务端&nbsp;&ndash;&nbsp;Immuthex的博客</title><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
+<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 3.TCP服务端&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第三章（TCP服务端）的中文翻译" /><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Reactor Netty参考指南 - 3.TCP服务端" /><body><section id="header">
     <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Immuthex的博客</span></a></span>
         <span class="header right-side"><div class="nav wrap">
@@ -66,7 +66,7 @@
 </code></pre></div><p>&lt;1&gt; 配置<code>TCP</code>服务器的host</p>
 <p>&lt;2&gt; 配置<code>TCP</code>服务器的port</p>
 </blockquote>
-<h1 id="32直接初始化">3.2.直接初始化</h1>
+<h1 id="32预先初始化">3.2.预先初始化</h1>
 <p>默认情况下，<code>TcpServer</code>初始化资源的操作在需要使用的时候才进行。这意味着初始化加载的时候<code>bind operation</code>会占用额外的时间：</p>
 <ul>
 <li>事件循环组</li>
@@ -140,7 +140,7 @@
 		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>&lt;1&gt; 接收从连接到客户端发过来的数据</p>
+</code></pre></div><p>&lt;1&gt; 接收从已连接的客户端发过来的数据</p>
 </blockquote>
 <h1 id="35生命周期回调">3.5.生命周期回调</h1>
 <p>下面的生命周期回调用参数是提供给您用来扩展<code>TcpServer</code>的：</p>
@@ -199,8 +199,8 @@
 		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>&lt;1&gt; 当一个远程客户端连接的时候<code>ReadTimeoutHandler</code>扩展了<code>Netty</code> pipeline。</p>
-<p>&lt;2&gt; 当初始化channel的时候<code>LoggingHandler</code>扩展了<code>Netty</code> pipeline。</p>
+</code></pre></div><p>&lt;1&gt; 当一个远程客户端连接的时候添加了一个<code>ReadTimeoutHandler</code>到<code>Netty</code> pipeline。</p>
+<p>&lt;2&gt; 当初始化channel的时候添加了一个<code>LoggingHandler</code>到<code>Netty</code> pipeline。</p>
 </blockquote>
 <h1 id="36tcp层面的配置">3.6.TCP层面的配置</h1>
 <p>这一章节描述了三种TCP层面的配置方式：</p>
@@ -570,7 +570,7 @@
 </h2></article><section class="article labels"><a class="category" href=/categories/%E7%BF%BB%E8%AF%91/>翻译</a><a class="tag" href=/tags/reactor-netty/>reactor netty</a></section><section class="article license">版权声明：如需转载，请带上本文链接、注明来源和本声明。否则将追究法律责任。https://www.immuthex.com/posts/reactor-netty-reference-guide/tcp-server/</section><section class="article author"><div class="details"><a class="item" href="https://github.com/immuthex" target="_blank" rel="noopener noreferrer"><span class="iconfont icon-github"></span>&nbsp;immuthex</a></div>
 </section>
 </div>
-<div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/reactor-netty-reference-guide/tcp-client/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 4.TCP客户端</a></p><p><a class="link" href="/posts/reactor-netty-reference-guide/getting-started/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 2.入门指南</a></p></section></div></section><section id="footer"><div class="footer-wrap">
+<div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/reactor-netty-reference-guide/tcp-client/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 4.TCP客户端</a></p><p><a class="link" href="/posts/reactor-netty-reference-guide/http-server/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 5.HTTP服务端</a></p></section></div></section><section id="footer"><div class="footer-wrap">
     <p class="copyright">©2021 immuthex</p></div>
 </section></body>
 
