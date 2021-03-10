@@ -18,8 +18,7 @@
  。它隐藏了创建<code>TCP</code>服务器所需的大部分<code>Netty</code>的功能，并增加了<code>Reactive Streams</code>背压。</p>
 <h1 id="31启动和停止">3.1.启动和停止</h1>
 <p>如果要启动一个<code>TCP</code>服务器，您必须创建并且配置一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpServer.html"target="_blank" rel="noopener noreferrer"><code>TcpServer</code></a>
-实例对象。默认情况下，<code>host</code>
-是配置为任何本地地址，当执行<code>bind</code>操作的时候系统会选择一个临时端口。下面的例子展示了怎么创建并且配置一个<code>TcpServer</code>实例：</p>
+实例对象。默认情况下，<code>host</code>是配置为任何本地地址，当执行<code>bind</code>操作的时候系统会选择一个临时端口。下面是创建并且配置一个<code>TcpServer</code>实例的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/create/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.DisposableServer<span style="color:#f92672">;</span>
@@ -99,7 +98,7 @@
 </blockquote>
 <h1 id="33写出数据">3.3.写出数据</h1>
 <p>如果要发送数据到一个已连接的客户端，您必须添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/NettyOutbound.html"target="_blank" rel="noopener noreferrer"><code>NettyOutbound</code></a>
-来写出数据。下面的例子展示了怎么添加一个I/O处理器：</p>
+来写出数据。下面是添加一个I/O处理器的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/send/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
@@ -122,7 +121,7 @@
 </blockquote>
 <h1 id="34消费数据">3.4.消费数据</h1>
 <p>如果要接收从连接的客户端发过来的数据，您必须添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/NettyInbound.html"target="_blank" rel="noopener noreferrer"><code>NettyInbound</code></a>
-来读取数据。下面的例子展示了怎么使用：</p>
+来读取数据。示例如下：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/read/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.DisposableServer<span style="color:#f92672">;</span>
@@ -174,7 +173,7 @@
 </tr>
 </tbody>
 </table>
-<p>下面的例子展示了怎么使用<code>doOnConnection</code>和<code>doOnChannelInit</code>回调：</p>
+<p>下面是使用<code>doOnConnection</code>和<code>doOnChannelInit</code>回调的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/lifecycle/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.logging.LoggingHandler<span style="color:#f92672">;</span>
@@ -519,7 +518,7 @@
 </tr>
 </tbody>
 </table>
-<p>下面的例子展示了怎么开启集成的度量：</p>
+<p>下面是开启集成的度量的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/metrics/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.DisposableServer<span style="color:#f92672">;</span>
@@ -541,7 +540,7 @@
 </blockquote>
 <h1 id="39unix域套接字">3.9.Unix域套接字</h1>
 <p>当使用本地传输时，<code>TCP</code>服务器支持Unix域套接字（UDS）。</p>
-<p>下面展示了怎么使用UDS：</p>
+<p>下面是使用UDS的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/uds/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.unix.DomainSocketAddress<span style="color:#f92672">;</span>

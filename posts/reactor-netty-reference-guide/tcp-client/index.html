@@ -18,7 +18,7 @@
 。它隐藏了创建<code>TCP</code>客户端所需的大部分<code>Netty</code>的功能，并增加了<code>Reactive Streams</code>背压。</p>
 <h1 id="41连接和断开">4.1.连接和断开</h1>
 <p>要将<code>TCP</code>客户端连接到给定的端点，您必须创建并且配置一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/TcpClient.html"target="_blank" rel="noopener noreferrer"><code>TcpClient</code></a>
-实例。默认情况下，<code>host</code>为<code>localhost</code>，<code>post</code>为<code>12012</code>。下面的例子展示了怎么创建一个<code>TcpClient</code>：</p>
+实例。默认情况下，<code>host</code>为<code>localhost</code>，<code>post</code>为<code>12012</code>。下面是创建一个<code>TcpClient</code>的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/create/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
@@ -43,7 +43,7 @@
 对象提供了简单的连接相关的API，包括<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableChannel.html#disposeNow-java.time.Duration-"target="_blank" rel="noopener noreferrer"><code>disposeNow()</code></a>
 ，调用这个方法会以阻塞的方式关闭客户端。</p>
 <h2 id="411host和port">4.1.1.Host和Port</h2>
-<p>想要连接特定的<code>host</code>和<code>port</code>，您可以使用以下方式来配置<code>TCP</code>客户端。下面的例子展示了怎么来做：</p>
+<p>想要连接特定的<code>host</code>和<code>port</code>，您可以使用以下方式来配置<code>TCP</code>客户端。示例如下：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/address/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
@@ -136,7 +136,7 @@
 </blockquote>
 <h1 id="44消费数据">4.4.消费数据</h1>
 <p>如果要接收从已有端点发过来的数据，您必须添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/NettyInbound.html"target="_blank" rel="noopener noreferrer"><code>NettyInbound</code></a>
-来读取数据。下面的例子展示了怎么使用：</p>
+来读取数据。示例如下：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/read/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
@@ -198,7 +198,7 @@
 </tr>
 </tbody>
 </table>
-<p>下面的例子展示了怎么使用<code>doOnConnected</code>和<code>doOnChannelInit</code>回调：</p>
+<p>下面是使用<code>doOnConnected</code>和<code>doOnChannelInit</code>回调的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/lifecycle/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.logging.LoggingHandler<span style="color:#f92672">;</span>
@@ -525,7 +525,7 @@
 </tr>
 </tbody>
 </table>
-<p>下面的例子展示了怎么开启集成的度量：</p>
+<p>下面是开启集成的度量的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/pool/metrics/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
@@ -613,7 +613,7 @@
 </code></pre></div></blockquote>
 <h1 id="49代理支持">4.9.代理支持</h1>
 <p>TCP客户端支持Netty提供的代理功能，并通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/tcp/ProxyProvider.html"target="_blank" rel="noopener noreferrer">ProxyProvider</a>
-构建器提供了一种特定的&quot;非代理主机&quot;的方式。下面的例子展示了怎么使用<code>ProxyProvider</code>：</p>
+构建器提供了一种特定的&quot;非代理主机&quot;的方式。下面是使用<code>ProxyProvider</code>的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/proxy/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
@@ -773,7 +773,7 @@
 </tr>
 </tbody>
 </table>
-<p>下面的例子展示了怎么开启集成的度量：</p>
+<p>下面是开启集成的度量的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/metrics/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
@@ -823,7 +823,7 @@
 </blockquote>
 <h1 id="411unix域套接字">4.11.Unix域套接字</h1>
 <p>当使用本地传输时，<code>TCP</code>服务器支持Unix域套接字（UDS）。</p>
-<p>下面展示了怎么使用UDS：</p>
+<p>下面是使用UDS的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/uds/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.unix.DomainSocketAddress<span style="color:#f92672">;</span>

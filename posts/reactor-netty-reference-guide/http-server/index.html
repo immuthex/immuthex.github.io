@@ -18,7 +18,7 @@
 。它隐藏了创建<code>HTTP</code>服务器所需的大部分<code>Netty</code>的功能，并增加了<code>Reactive Streams</code>背压。</p>
 <h1 id="51启动和停止">5.1.启动和停止</h1>
 <p>要想启动一个HTTP服务器，您必须创建并且配置一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/server/HttpServer.html"target="_blank" rel="noopener noreferrer"><code>HttpServer</code></a>
-实例。默认情况下，<code>host</code>被配置为任何的本地地址，当执行<code>bind</code>操作的时候系统会选择一个临时端口。下面的例子展示了怎么创建并且配置一个<code>HttpServer</code>实例：</p>
+实例。默认情况下，<code>host</code>被配置为任何的本地地址，当执行<code>bind</code>操作的时候系统会选择一个临时端口。下面是创建并且配置一个<code>HttpServer</code>实例的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/create/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.DisposableServer<span style="color:#f92672">;</span>
@@ -98,7 +98,7 @@
 </blockquote>
 <h1 id="53http路由">5.3.HTTP路由</h1>
 <p>想要给<code>HTTP</code>服务器定义路由需要配置提供的<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/server/HttpServerRoutes.html"target="_blank" rel="noopener noreferrer"><code>HttpServerRoutes</code></a>
- builder。下面的例子展示了怎么来做：</p>
+ builder。示例如下：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/routing/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
@@ -226,7 +226,7 @@
 <p>如果要发送数据到一个已连接的客户端，您必须使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/server/HttpServer.html#handle-java.util.function.BiFunction-"target="_blank" rel="noopener noreferrer"><code>handler(…)</code></a>
 或者<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/server/HttpServer.html#route-java.util.function.Consumer-"target="_blank" rel="noopener noreferrer"><code>route(…)</code></a>
 来添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/server/HttpServerResponse.html"target="_blank" rel="noopener noreferrer"><code>HttpServerResponse</code></a>
-来写出数据。下面的例子展示了怎么使用<code>handle(…)</code>方法：</p>
+来写出数据。下面是使用<code>handle(…)</code>方法的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/send/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
@@ -249,7 +249,7 @@
 </blockquote>
 <h2 id="541添加headers或其他元数据">5.4.1.添加Headers或其他元数据</h2>
 <p>当您给已连接的客户端发送数据的时候，您可能想发送额外的headers,cookies,status code和其他的元数据。您可以使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/server/HttpServerResponse.html"target="_blank" rel="noopener noreferrer"><code>HttpServerResponse</code></a>
-来添加这些额外的元数据。下面的例子展示了怎么做：</p>
+来添加这些额外的元数据。示例如下：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/send/headers/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.codec.http.HttpHeaderNames<span style="color:#f92672">;</span>
@@ -284,7 +284,7 @@
 <li><code>compress(int)</code>：当响应体大小超过了给定的值就会将响应体进行压缩（单位：字节）。</li>
 <li><code>compress(BiPredicate&lt;HttpServerRequest, HttpServerResponse&gt;)</code>：如果predicate返回<code>true</code>则压缩。</li>
 </ul>
-<p>下面的例子展示了怎么使用<code>compress</code>方法（设置为<code>true</code>）来启用压缩：</p>
+<p>下面的是使用<code>compress</code>方法（设置为<code>true</code>）来启用压缩的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/compression/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.DisposableServer<span style="color:#f92672">;</span>
@@ -314,7 +314,7 @@
 或者<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/server/HttpServer.html#route-java.util.function.Consumer-"target="_blank" rel="noopener noreferrer"><code>route(…)</code></a>
 来添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/server/HttpServerRequest.html"target="_blank" rel="noopener noreferrer"><code>HttpServerRequest</code></a>
 来读数据。</p>
-<p>下面的例子展示了怎么使用<code>handle(…)</code>方法：</p>
+<p>下面是使用<code>handle(…)</code>方法的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/read/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.DisposableServer<span style="color:#f92672">;</span>
@@ -336,7 +336,7 @@
 </blockquote>
 <h2 id="551读取headersuri参数和其他元数据">5.5.1.读取Headers,URI参数和其他元数据</h2>
 <p>当您从已连接的客户端接收数据的时候，您可能需要检查请求头，参数和其他的元数据。您可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/server/HttpServerRequest.html"target="_blank" rel="noopener noreferrer"><code>HttpServerRequest</code></a>
-来获取这些元数据。下面的例子展示了怎么做：</p>
+来获取这些元数据。示例如下：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/read/headers/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
@@ -364,7 +364,7 @@
 <span style="color:#f92672">}</span>
 </code></pre></div></blockquote>
 <h3 id="获取远程客户端地址">获取远程（客户端）地址</h3>
-<p>您可以从请求数据中获取的额外的元数据，您也可以拿到<code>host(server)</code>的地址，<code>remote(client)</code>的地址和<code>schema</code>。根据选择的工厂方法，您可以直接从channel拿到这些信息或者从<code>Forwarded</code>或者<code>X-Forwarded-* HTTP</code>请求头中拿到这些信息。下面的例子展示了怎么去做：</p>
+<p>您可以从请求数据中获取的额外的元数据，您也可以拿到<code>host(server)</code>的地址，<code>remote(client)</code>的地址和<code>schema</code>。根据选择的工厂方法，您可以直接从channel拿到这些信息或者从<code>Forwarded</code>或者<code>X-Forwarded-* HTTP</code>请求头中拿到这些信息。示例如下：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/clientaddress/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
@@ -431,7 +431,7 @@
 </code></pre></div><p>&lt;1&gt; 添加一个自定义头处理器。</p>
 <p>&lt;2&gt; 从远（客户端）端返回地址。</p>
 </blockquote>
-<h2 id="552http请求解码">5.5.2.HTTP请求解码</h2>
+<h2 id="552http请求解码器">5.5.2.HTTP请求解码器</h2>
 <p>默认情况下，<code>Netty</code>对收到的请求配置了一些限制条件，例如：</p>
 <ul>
 <li>
@@ -520,7 +520,7 @@
 </tr>
 </tbody>
 </table>
-<p>下面的例子展示了怎么使用<code>doOnConnection</code>和<code>doOnChannelInit</code>回调：</p>
+<p>下面是使用<code>doOnConnection</code>和<code>doOnChannelInit</code>回调的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/lifecycle/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.logging.LoggingHandler<span style="color:#f92672">;</span>
@@ -1001,7 +1001,7 @@ hello
 </tr>
 </tbody>
 </table>
-<p>下面的例子展示了怎么开启集成的度量：</p>
+<p>下面是开启集成的度量的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/metrics/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.micrometer.core.instrument.Metrics<span style="color:#f92672">;</span>
@@ -1040,7 +1040,7 @@ hello
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>&lt;1&gt; 设置带有<code>URI</code>标签的仪表的上限</p>
-<p>&lt;2&gt; 在可能的情况下，模板化的URI将被用作URI标签值。</p>
+<p>&lt;2&gt; 在可能的情况下，模板化的URI将被用作URI标签的值。</p>
 <p>&lt;3&gt; 启用内置集成的Micrometer</p>
 </blockquote>
 <blockquote>
@@ -1084,7 +1084,7 @@ hello
 </blockquote>
 <h1 id="512unix域套接字">5.12.Unix域套接字</h1>
 <p>当使用本地传输时，<code>HTTP</code>服务器支持Unix域套接字（UDS）。</p>
-<p>下面展示了怎么使用UDS：</p>
+<p>下面是使用UDS的例子：</p>
 <blockquote>
 <p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/server/uds/Application.java</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.unix.DomainSocketAddress<span style="color:#f92672">;</span>
@@ -1113,7 +1113,7 @@ hello
 </h2></article><section class="article labels"><a class="category" href=/categories/%E7%BF%BB%E8%AF%91/>翻译</a><a class="tag" href=/tags/reactor-netty/>reactor netty</a></section><section class="article license">版权声明：如需转载，请带上本文链接、注明来源和本声明。否则将追究法律责任。https://www.immuthex.com/posts/reactor-netty-reference-guide/http-server/</section><section class="article author"><div class="details"><a class="item" href="https://github.com/immuthex" target="_blank" rel="noopener noreferrer"><span class="iconfont icon-github"></span>&nbsp;immuthex</a></div>
 </section>
 </div>
-<div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/reactor-netty-reference-guide/tcp-client/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 4.TCP客户端</a></p></section></div></section><section id="footer"><div class="footer-wrap">
+<div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/reactor-netty-reference-guide/http-client/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 6.HTTP客户端</a></p><p><a class="link" href="/posts/reactor-netty-reference-guide/tcp-client/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 4.TCP客户端</a></p></section></div></section><section id="footer"><div class="footer-wrap">
     <p class="copyright">©2021 immuthex</p></div>
 </section></body>
 
