@@ -3939,7 +3939,8 @@ hello
 &lt;/h1&gt;
 &lt;h1 id=&#34;5http服务端http-server&#34;&gt;&lt;a href=&#34;../http-server&#34;&gt;5.HTTP服务端&lt;/a&gt;
 &lt;/h1&gt;
-&lt;h1 id=&#34;6http客户端&#34;&gt;6.HTTP客户端&lt;/h1&gt;
+&lt;h1 id=&#34;6http客户端http-client&#34;&gt;&lt;a href=&#34;../http-client&#34;&gt;6.HTTP客户端&lt;/a&gt;
+&lt;/h1&gt;
 &lt;h1 id=&#34;7udp服务端&#34;&gt;7.UDP服务端&lt;/h1&gt;
 &lt;h1 id=&#34;8udp客户端&#34;&gt;8.UDP客户端&lt;/h1&gt;</description>
     </item>
