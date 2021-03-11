@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.80.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.81.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="supported-color-schemes" content="light dark"><title>git cherry-pick 教程&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="git,cherry-pick,git 教程,git合并特定的提交记录" /><meta name="description" content="git使用cherry-pick应用其他分支的特定提交记录到当前分支" /><link rel="stylesheet" href="/css/core.min.f50770753e7b4a1cf823b8241022bf5a6908ecbc3cfcba59bfb76af28f94cceda372fd3dad1f0b6fb6592fd79f9fc1f3.css" integrity="sha384-9QdwdT57Shz4I7gkECK/WmkI7Lw8/LpZv7dq8o&#43;UzO2jcv09rR8Lb7ZZL9efn8Hz"><meta name="twitter:card" content="summary" />
+<meta name="supported-color-schemes" content="light dark"><title>git cherry-pick 教程&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="git,cherry-pick,git 教程,git合并特定的提交记录" /><meta name="description" content="git使用cherry-pick应用其他分支的特定提交记录到当前分支" /><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="git cherry-pick 教程" /><body><section id="header">
     <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Immuthex的博客</span></a></span>
         <span class="header right-side"><div class="nav wrap">
@@ -9,7 +9,8 @@
                 class="iconfont icon-github"></span>&nbsp;Github</a>
     </nav>
 </div></span></div></section><section id="content"><div class="article-container"><section class="article header">
-    <h1 class="article title">git cherry-pick 教程</h1><p class="article date">2021-02-28</p></section><article class="article markdown-body"><p>在多分支开发的时候会有需要把一个分支的部分commit应用到其他的分支上，<code>git merge</code>就满足不了这个需求了，这个时候就可以用<code>git cherry-pick</code>，它的作用是选择已存在的commit应用到当前分支上，并产生新的commit SHA-1 校验和。下面是这个命令的图解示例。</p>
+    <h1 class="article title">git cherry-pick 教程</h1><p class="article date">2021-02-28</p></section><article class="article markdown-body"><p>在多分支开发的时候会有需要把一个分支的部分commit应用到其他的分支上，然而<code>git merge</code>会把一个分支的commits都应用到当前分支，这时候我们可以使用<code>git cherry-pick</code>来完成这一操作，它的作用是选择已存在的commit应用到当前分支上，并产生新的commit SHA-1 校验和。</p>
+<p>下面是这个命令的图解示例。</p>
 <h1 id="图解示例">图解示例</h1>
 <p>如下有两个分支<code>master</code>和<code>dev</code>，从<code>C2</code>开始两个分支开始有不同的commits。</p>
 <p><img  src="/img/git-cherry-pick-tutorial/sample1.png"
