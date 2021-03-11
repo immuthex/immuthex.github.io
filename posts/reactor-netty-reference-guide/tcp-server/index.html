@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.81.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.80.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 3.TCP服务端&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第三章（TCP服务端）的中文翻译" /><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
+<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 3.TCP服务端&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第三章（TCP服务端）的中文翻译" /><link rel="stylesheet" href="/css/core.min.f50770753e7b4a1cf823b8241022bf5a6908ecbc3cfcba59bfb76af28f94cceda372fd3dad1f0b6fb6592fd79f9fc1f3.css" integrity="sha384-9QdwdT57Shz4I7gkECK/WmkI7Lw8/LpZv7dq8o&#43;UzO2jcv09rR8Lb7ZZL9efn8Hz"><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Reactor Netty参考指南 - 3.TCP服务端" /><body><section id="header">
     <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Immuthex的博客</span></a></span>
         <span class="header right-side"><div class="nav wrap">
@@ -204,11 +204,17 @@
 <h1 id="36tcp层面的配置">3.6.TCP层面的配置</h1>
 <p>这一章节描述了三种TCP层面的配置方式：</p>
 <ul>
-<li><a href="#361%e8%ae%be%e7%bd%aechannel-options">设置Channel Options</a>
+<li>
+<p><a href="#361%e8%ae%be%e7%bd%aechannel-options">设置Channel Options</a>
+</p>
 </li>
-<li><a href="#362%e4%bd%bf%e7%94%a8wire-logger">使用Wire Logger</a>
+<li>
+<p><a href="#362%e4%bd%bf%e7%94%a8wire-logger">使用Wire Logger</a>
+</p>
 </li>
-<li><a href="#363%e4%bd%bf%e7%94%a8event-loop-group">使用Event Loop Group</a>
+<li>
+<p><a href="#363%e4%bd%bf%e7%94%a8event-loop-group">使用Event Loop Group</a>
+</p>
 </li>
 </ul>
 <h2 id="361设置channel-options">3.6.1.设置Channel Options</h2>
@@ -301,7 +307,7 @@
 </blockquote>
 <h2 id="363使用event-loop-group">3.6.3.使用Event Loop Group</h2>
 <p>默认情况下，<code>TCP</code>服务器使用一个&quot;Event Loop Group&quot;，工作线程数等于初始化的时候可以用的处理器数量（但最小是4）。您也可以使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/resources/LoopResources.html"target="_blank" rel="noopener noreferrer">LoopResource</a>
-<code>#server</code>其中的一个方法来修改配置。</p>
+<code>#create</code>其中的一个方法来修改配置。</p>
 <p>默认的<code>Event Loop Group</code>配置如下：</p>
 <blockquote>
 <p>./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java</p>
@@ -537,6 +543,31 @@
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>&lt;1&gt; 开启内建集成的Micrometer</p>
+</blockquote>
+<p>如果您想让TCP服务端度量与除了<code>Micrometer</code>之外的系统集成或者想提供自己与<code>Micrometer</code>的集成来添加自己的度量记录器，您可以按如下方式实现：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/metrics/custom/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.DisposableServer<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.channel.ChannelMetricsRecorder<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.tcp.TcpServer<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.net.SocketAddress<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		DisposableServer server <span style="color:#f92672">=</span>
+				TcpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">metrics</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> CustomChannelMetricsRecorder<span style="color:#f92672">::</span><span style="color:#66d9ef">new</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">();</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 开启TCP服务端度量并且提供<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/channel/ChannelMetricsRecorder.html"target="_blank" rel="noopener noreferrer"><code>ChannelMetricsRecorder</code></a>
+的实现。</p>
 </blockquote>
 <h1 id="39unix域套接字">3.9.Unix域套接字</h1>
 <p>当使用本地传输时，<code>TCP</code>服务器支持Unix域套接字（UDS）。</p>

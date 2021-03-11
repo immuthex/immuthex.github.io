@@ -6,10 +6,1126 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <copyright>©2021 immuthex</copyright>
-    <lastBuildDate>Wed, 10 Mar 2021 19:58:50 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 11 Mar 2021 13:08:23 +0800</lastBuildDate>
     
         <atom:link href="https://www.immuthex.com/tags/reactor-netty/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Reactor Netty参考指南 - 8.UDP客户端</title>
+      <link>https://www.immuthex.com/posts/reactor-netty-reference-guide/udp-client/</link>
+      <pubDate>Thu, 11 Mar 2021 13:08:23 +0800</pubDate>
+      
+      <guid>https://www.immuthex.com/posts/reactor-netty-reference-guide/udp-client/</guid>
+      <description>&lt;h2 id=&#34;目录contents&#34;&gt;&lt;a href=&#34;../contents&#34;&gt;目录&lt;/a&gt;
+&lt;/h2&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;原文地址httpsprojectreactoriodocsnettyreleasereferenceindexhtmludp-client&#34;&gt;&lt;a href=&#34;https://projectreactor.io/docs/netty/release/reference/index.html#udp-client&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;原文地址&lt;/a&gt;
+&lt;/h1&gt;
+&lt;p&gt;Reactor Netty提供了易于使用、易于配置的&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpClient.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;UdpClient&lt;/code&gt;&lt;/a&gt;
+。它隐藏了创建&lt;code&gt;UDP&lt;/code&gt;客户端所需的大部分&lt;code&gt;Netty&lt;/code&gt;的功能，并增加了&lt;code&gt;Reactive Streams&lt;/code&gt;背压。&lt;/p&gt;
+&lt;h1 id=&#34;81连接和断开&#34;&gt;8.1.连接和断开&lt;/h1&gt;
+&lt;p&gt;要将&lt;code&gt;UDP&lt;/code&gt;客户端连接到给定的端点，您必须创建并且配置一个&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpClient.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;UdpClient&lt;/code&gt;&lt;/a&gt;
+实例。默认情况下，host为&lt;code&gt;localhost&lt;/code&gt;，post为&lt;code&gt;12012&lt;/code&gt;。下面是创建和连接一个UDP客户端的例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/create/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;                            &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;2&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 创建一个&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpClient.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;UdpClient&lt;/code&gt;&lt;/a&gt;
+实例用来进行的配置操作。&lt;/p&gt;
+&lt;p&gt;&amp;lt;2&amp;gt; 用阻塞的方式进行连接操作，并且等待它初始化完成。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;返回的&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/Connection.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;Connection&lt;/code&gt;&lt;/a&gt;
+对象提供了简单的连接相关的API，包括&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableChannel.html#disposeNow-java.time.Duration-&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;disposeNow()&lt;/code&gt;&lt;/a&gt;
+，调用这个方法会以阻塞的方式关闭客户端。&lt;/p&gt;
+&lt;h2 id=&#34;811host和port&#34;&gt;8.1.1.Host和Port&lt;/h2&gt;
+&lt;p&gt;想要连接特定的&lt;code&gt;host&lt;/code&gt;和&lt;code&gt;port&lt;/code&gt;，您可以使用以下方式来配置&lt;code&gt;UDP&lt;/code&gt;客户端。示例如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/address/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;            &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;2&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 指定客户端需要连接的&lt;code&gt;host&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&amp;lt;2&amp;gt; 指定客户端需要连接的&lt;code&gt;port&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;82预先初始化&#34;&gt;8.2.预先初始化&lt;/h1&gt;
+&lt;p&gt;默认情况下，&lt;code&gt;UdpClient&lt;/code&gt;初始化资源的操作在需要使用的时候才进行。这意味着初始化加载的时候&lt;code&gt;connect operation&lt;/code&gt;会占用额外的时间：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;事件循环组&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;主机名解析器&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;native传输库（当使用了native传输的时候）&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当您需要预加载这些资源的时候，您可以按照以下方式来配置&lt;code&gt;UdpClient&lt;/code&gt;：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/warmup/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.core.publisher.Mono&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		UdpClient udpClient &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		                               &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+		                               &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+		                               &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;handle&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;udpInbound&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; udpOutbound&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; udpOutbound&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sendString&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Mono&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;just&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hello&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)));&lt;/span&gt;
+
+		udpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;warmup&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;		         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; udpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;2&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 初始化和加载事件循环组，主机名解析器和native传输库&lt;/p&gt;
+&lt;p&gt;&amp;lt;2&amp;gt; 在连接远程节点的时候会进行主机名解析&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;83写出数据&#34;&gt;8.3.写出数据&lt;/h1&gt;
+&lt;p&gt;如果要发送数据到一个已有的端点，您必须添加一个I/O处理器。这个I/O处理器可以通过&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpOutbound.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;UdpOutbound&lt;/code&gt;&lt;/a&gt;
+来写出数据。&lt;/p&gt;
+&lt;p&gt;下面是一个发送&lt;code&gt;hello&lt;/code&gt;字符串的例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/send/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.core.publisher.Mono&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;handle&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;udpInbound&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; udpOutbound&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; udpOutbound&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sendString&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Mono&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;just&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hello&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)))&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 发送一个&lt;code&gt;hello&lt;/code&gt;字符串到远端&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;84消费数据&#34;&gt;8.4.消费数据&lt;/h1&gt;
+&lt;p&gt;如果要接收从已有端点发过来的数据，您必须添加一个I/O处理器。这个I/O处理器可以通过&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpInbound.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;UdpInbound&lt;/code&gt;&lt;/a&gt;
+来读取数据。示例如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/read/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;handle&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;udpInbound&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; udpOutbound&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; udpInbound&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;receive&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;then&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;())&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 接收从已有端点发送过来的数据&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;85生命周期回调&#34;&gt;8.5.生命周期回调&lt;/h1&gt;
+&lt;p&gt;下面的生命周期回调用参数是提供给您用来扩展&lt;code&gt;UdpClient&lt;/code&gt;的：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Callback&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doAfterResolve&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;在成功解析远程地址之后调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doOnChannelInit&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;在初始化channel的时候调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doOnConnect&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;当channel将要连接的时候调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doOnConnected&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;当channel已经连接上的时候调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doOnDisconnected&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;当channel断开的时候被调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doOnResolve&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;当远程地址将要被解析的时候被调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doOnResolveError&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;在远程地址解析失败的情况下被调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;下面是使用&lt;code&gt;doOnConnected&lt;/code&gt;和&lt;code&gt;doOnChannelInit&lt;/code&gt;回调的例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/lifecycle/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.handler.codec.LineBasedFrameDecoder&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.handler.logging.LoggingHandler&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;doOnConnected&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;conn &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; conn&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;addHandler&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; LineBasedFrameDecoder&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;8192&lt;span style=&#34;color:#f92672&#34;&gt;)))&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;doOnChannelInit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;observer&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; channel&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; remoteAddress&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;
+				             channel&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;pipeline&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				                    &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;addFirst&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; LoggingHandler&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.examples&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)))&lt;/span&gt;      &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;2&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 当一个channel连接上之后添加了一个&lt;code&gt;LineBasedFrameDecoder&lt;/code&gt;到&lt;code&gt;Netty&lt;/code&gt; pipeline。&lt;/p&gt;
+&lt;p&gt;&amp;lt;2&amp;gt; 当初始化channel的时候添加了一个&lt;code&gt;LoggingHandler&lt;/code&gt;到&lt;code&gt;Netty&lt;/code&gt; pipeline。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;86连接配置&#34;&gt;8.6.连接配置&lt;/h1&gt;
+&lt;p&gt;这一章节将给您介绍三种UDP层的配置方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#861channel-options&#34;&gt;Channel Options&lt;/a&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#862wire-logger&#34;&gt;Wire Logger&lt;/a&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#863event-loop-group&#34;&gt;Event Loop Group&lt;/a&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;861channel-options&#34;&gt;8.6.1.Channel Options&lt;/h2&gt;
+&lt;p&gt;默认情况下，&lt;code&gt;UDP&lt;/code&gt;客户端配置了以下options：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/udp/UdpClientConnect.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;UdpClientConnect&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;config&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; UdpClientConfig&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+          ConnectionProvider&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;newConnection&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(),&lt;/span&gt;
+          Collections&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;singletonMap&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;ChannelOption&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;AUTO_READ&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;),&lt;/span&gt;
+          &lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; InetSocketAddress&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;NetUtil&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;LOCALHOST&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; DEFAULT_PORT&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;p&gt;如果需要添加新的option或者修改已有的option，您可以使用如下的方式：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/channeloptions/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.channel.ChannelOption&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;option&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;ChannelOption&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;CONNECT_TIMEOUT_MILLIS&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; 10000&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;p&gt;您可以通过以下的链接找到更多关于Netty channel options的信息：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://netty.io/4.1/api/io/netty/channel/ChannelOption.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;ChannelOption&lt;/code&gt;&lt;/a&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/net/socketOpt.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Socket Options&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;862wire-logger&#34;&gt;8.6.2.Wire Logger&lt;/h2&gt;
+&lt;p&gt;Reactor Netty提供了线路记录（wire logging）用来检查点对点的流量。默认情况下，线路记录是关闭的。如果想要开启它，您必须将日志&lt;code&gt;reactor.netty.udp.UdpClient&lt;/code&gt;的设置为&lt;code&gt;DEBUG&lt;/code&gt;等级并且按如下方式进行配置：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/wiretap/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;wiretap&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启线路记录&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;默认情况下，线路记录在输出内容的时候会使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#HEX_DUMP&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#HEX_DUMP&lt;/a&gt;
+。您也可以通过配置&lt;code&gt;UdpClient&lt;/code&gt;改为&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#SIMPLE&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#SIMPLE&lt;/a&gt;
+或者&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#TEXTUAL&lt;/a&gt;
+：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/wiretap/custom/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.handler.logging.LogLevel&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.transport.logging.AdvancedByteBufFormat&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;wiretap&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;logger-name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; LogLevel&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;DEBUG&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; AdvancedByteBufFormat&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;TEXTUAL&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启线路记录并使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#TEXTUAL&lt;/a&gt;
+来输出内容。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;863event-loop-group&#34;&gt;8.6.3.Event Loop Group&lt;/h2&gt;
+&lt;p&gt;默认情况下，&lt;code&gt;UDP&lt;/code&gt;客户端使用&amp;quot;Event Loop Group&amp;quot;，工作线程数等于初始化的时候可以用的处理器数量（但最小是4）。您也可以使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/resources/LoopResources.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;LoopResource&lt;/a&gt;
+&lt;code&gt;#create&lt;/code&gt;其中的一个方法来修改配置。&lt;/p&gt;
+&lt;p&gt;默认的&lt;code&gt;Event Loop Group&lt;/code&gt;配置如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default worker thread count, fallback to available processor
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * (but with a minimum value of 4)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String IO_WORKER_COUNT &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.ioWorkerCount&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default selector thread count, fallback to -1 (no selector thread)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String IO_SELECT_COUNT &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.ioSelectCount&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default worker thread count for UDP, fallback to available processor
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * (but with a minimum value of 4)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String UDP_IO_THREAD_COUNT &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.udp.ioThreadCount&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default quiet period that guarantees that the disposal of the underlying LoopResources
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * will not happen, fallback to 2 seconds.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String SHUTDOWN_QUIET_PERIOD &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.ioShutdownQuietPeriod&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default maximum amount of time to wait until the disposal of the underlying LoopResources
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * regardless if a task was submitted during the quiet period, fallback to 15 seconds.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String SHUTDOWN_TIMEOUT &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.ioShutdownTimeout&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default value whether the native transport (epoll, kqueue) will be preferred,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * fallback it will be preferred when available
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String NATIVE &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.native&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;p&gt;如果需要修改这些设置，您也可以通过如下方式进行配置：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/eventloop/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.resources.LoopResources&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		LoopResources loop &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; LoopResources&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;event-loop&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; 1&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; 4&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;runOn&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;loop&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;h1 id=&#34;87度量&#34;&gt;8.7.度量&lt;/h1&gt;
+&lt;p&gt;UDP客户端支持与&lt;a href=&#34;https://micrometer.io/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Micrometer&lt;/a&gt;
+的内置集成。它暴露了所有前缀为&lt;code&gt;reactor.netty.udp.client&lt;/code&gt;的度量。&lt;/p&gt;
+&lt;p&gt;下面的表格提供了UDP客户端度量的相关信息：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;度量名称&lt;/th&gt;
+&lt;th&gt;类型&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.udp.client.data.received&lt;/td&gt;
+&lt;td&gt;DistributionSummary&lt;/td&gt;
+&lt;td&gt;收到的数据量，以字节为单位&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.udp.client.data.sent&lt;/td&gt;
+&lt;td&gt;DistributionSummary&lt;/td&gt;
+&lt;td&gt;发送的数据量，以字节为单位&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.udp.client.errors&lt;/td&gt;
+&lt;td&gt;Counter&lt;/td&gt;
+&lt;td&gt;发生的错误数量&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.udp.client.connect.time&lt;/td&gt;
+&lt;td&gt;Timer&lt;/td&gt;
+&lt;td&gt;连接远程地址所花费的时间&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.udp.client.address.resolver&lt;/td&gt;
+&lt;td&gt;Timer&lt;/td&gt;
+&lt;td&gt;解析远程地址花费的时间&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;下面额外的度量也是可用的：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ByteBufAllocator&lt;/code&gt;度量&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;度量名称&lt;/th&gt;
+&lt;th&gt;类型&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.heap.memory&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;堆内存的字节数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.direct.memory&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;堆外内存的字节数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.heap.arenas&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;堆内存的个数（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.direct.arenas&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;堆外内存的个数（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.threadlocal.caches&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;threadlocal的缓存数量（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.tiny.cache.size&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;微小缓存的大小（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.small.cache.size&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;小缓存的大小（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.normal.cache.size&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;一般缓存的大小（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.chunk.size&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;一个区域的块大小（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;下面是开启集成的度量的例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/metrics/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;metrics&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启内建集成的Micrometer&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如果您想让UDP客户端度量与除了&lt;code&gt;Micrometer&lt;/code&gt;之外的系统集成或者想提供自己与&lt;code&gt;Micrometer&lt;/code&gt;的集成来添加自己的度量记录器，您可以按如下方式实现：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/metrics/custom/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.channel.ChannelMetricsRecorder&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.net.SocketAddress&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection connection &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpClient&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;example.com&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;80&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;metrics&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; CustomChannelMetricsRecorder&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;connectNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启UDP客户端度量并且提供&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/channel/ChannelMetricsRecorder.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;ChannelMetricsRecorder&lt;/code&gt;&lt;/a&gt;
+的实现。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/edit/master/docs/asciidoc/udp-client.adoc&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Suggest Edit&lt;/a&gt;
+ to &amp;ldquo;&lt;a href=&#34;https://projectreactor.io/docs/netty/release/reference/index.html#udp-client&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;UDP Client&lt;/a&gt;
+&amp;rdquo;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;目录contents-1&#34;&gt;&lt;a href=&#34;../contents&#34;&gt;目录&lt;/a&gt;
+&lt;/h2&gt;</description>
+    </item>
+    
+    <item>
+      <title>Reactor Netty参考指南 - 7.UDP服务端</title>
+      <link>https://www.immuthex.com/posts/reactor-netty-reference-guide/udp-server/</link>
+      <pubDate>Thu, 11 Mar 2021 12:28:07 +0800</pubDate>
+      
+      <guid>https://www.immuthex.com/posts/reactor-netty-reference-guide/udp-server/</guid>
+      <description>&lt;h2 id=&#34;目录contents&#34;&gt;&lt;a href=&#34;../contents&#34;&gt;目录&lt;/a&gt;
+&lt;/h2&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;原文地址httpsprojectreactoriodocsnettyreleasereferenceindexhtmludp-server&#34;&gt;&lt;a href=&#34;https://projectreactor.io/docs/netty/release/reference/index.html#udp-server&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;原文地址&lt;/a&gt;
+&lt;/h1&gt;
+&lt;p&gt;&lt;code&gt;Reactor Netty&lt;/code&gt;提供了易于使用和配置的&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpServer.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;UdpServer&lt;/code&gt;&lt;/a&gt;
+ 。它隐藏了创建&lt;code&gt;UDP&lt;/code&gt;服务器所需的大部分&lt;code&gt;Netty&lt;/code&gt;的功能，并增加了&lt;code&gt;Reactive Streams&lt;/code&gt;背压。&lt;/p&gt;
+&lt;h1 id=&#34;71启动和停止&#34;&gt;7.1.启动和停止&lt;/h1&gt;
+&lt;p&gt;如果要启动一个&lt;code&gt;UDP&lt;/code&gt;服务器，您必须创建并且配置一个&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpServer.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;UdpServer&lt;/code&gt;&lt;/a&gt;
+实例对象。默认情况下，host为&lt;code&gt;localhost&lt;/code&gt;，port为&lt;code&gt;12012&lt;/code&gt;。下面是创建并且启动一个&lt;code&gt;UdpServer&lt;/code&gt;服务器的例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/create/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;                         &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;2&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 创建一个&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpServer.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;UdpServer&lt;/code&gt;&lt;/a&gt;
+实例用来做配置操作。&lt;/p&gt;
+&lt;p&gt;&amp;lt;2&amp;gt; 使用阻塞等待的方式启动服务器，直到初始化完成。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;返回的&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/Connection.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;Connection&lt;/code&gt;&lt;/a&gt;
+提供了简单的服务器API，包括&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableChannel.html#disposeNow-java.time.Duration-&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;disposeNow()&lt;/code&gt;&lt;/a&gt;
+，这个方法可以以阻塞等待的方式来关闭服务器。&lt;/p&gt;
+&lt;h2 id=&#34;711host和port&#34;&gt;7.1.1.Host和Port&lt;/h2&gt;
+&lt;p&gt;想要设置特定&lt;code&gt;host&lt;/code&gt;和&lt;code&gt;port&lt;/code&gt;，您可以用下面的方式来配置&lt;code&gt;UDP&lt;/code&gt;服务器：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/address/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;localhost&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;8080&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;2&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 配置&lt;code&gt;UDP&lt;/code&gt;服务器的host&lt;/p&gt;
+&lt;p&gt;&amp;lt;2&amp;gt; 配置&lt;code&gt;UDP&lt;/code&gt;服务器的port&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;72预先初始化&#34;&gt;7.2.预先初始化&lt;/h1&gt;
+&lt;p&gt;默认情况下，&lt;code&gt;UdpServer&lt;/code&gt;初始化资源的操作在需要使用的时候才进行。这意味着初始化加载的时候&lt;code&gt;bind operation&lt;/code&gt;会占用额外的时间：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;事件循环组&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;native传输库（当使用了native传输的时候）&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当您需要预加载这些资源的时候，您可以按照以下方式来配置&lt;code&gt;UdpServer&lt;/code&gt;：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/warmup/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.channel.socket.DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.core.publisher.Mono&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		UdpServer udpServer &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;handle&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;in&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; out&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;
+				             out&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sendObject&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+				                 in&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;receiveObject&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				                   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;map&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;o &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+				                       &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;o &lt;span style=&#34;color:#66d9ef&#34;&gt;instanceof&lt;/span&gt; DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+				                           DatagramPacket p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; o&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+				                           &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;retain&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(),&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sender&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;());&lt;/span&gt;
+				                       &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+				                       &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+				                           &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Mono&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Exception&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Unexpected type of the message: &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; o&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+				                       &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+				                   &lt;span style=&#34;color:#f92672&#34;&gt;})));&lt;/span&gt;
+
+		udpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;warmup&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;		         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; udpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 初始化和加载事件循环组和native传输库&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;73写出数据&#34;&gt;7.3.写出数据&lt;/h1&gt;
+&lt;p&gt;如果要发送数据到一个已连接的客户端，您必须添加一个I/O处理器。这个I/O处理器可以通过&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpOutbound.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;UdpOutbound&lt;/code&gt;&lt;/a&gt;
+来写出数据。下面是一个发送&lt;code&gt;hello&lt;/code&gt;字符串的例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/send/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.buffer.ByteBuf&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.buffer.Unpooled&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.channel.socket.DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.util.CharsetUtil&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.core.publisher.Mono&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;handle&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;in&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; out&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;
+				             out&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sendObject&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+				                 in&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;receiveObject&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				                   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;map&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;o &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+				                       &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;o &lt;span style=&#34;color:#66d9ef&#34;&gt;instanceof&lt;/span&gt; DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+				                           DatagramPacket p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; o&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+				                           ByteBuf buf &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Unpooled&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;copiedBuffer&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hello&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; CharsetUtil&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;UTF_8&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+				                           &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;buf&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sender&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;());&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				                       &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+				                       &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+				                           &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Mono&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Exception&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Unexpected type of the message: &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; o&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+				                       &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+				                   &lt;span style=&#34;color:#f92672&#34;&gt;})))&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 发送一个&lt;code&gt;hello&lt;/code&gt;字符串到远端&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;74消费数据&#34;&gt;7.4.消费数据&lt;/h1&gt;
+&lt;p&gt;如果要接收从远端发过来的数据，您必须添加一个I/O处理器。这个I/O处理器可以通过&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpInbound.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;UdpInbound&lt;/code&gt;&lt;/a&gt;
+来读取数据。示例如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/read/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.channel.socket.DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.core.publisher.Mono&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;handle&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;in&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; out&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;
+				             out&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sendObject&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+				                 in&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;receiveObject&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				                   &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;map&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;o &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+				                       &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;o &lt;span style=&#34;color:#66d9ef&#34;&gt;instanceof&lt;/span&gt; DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+				                           DatagramPacket p &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; o&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+				                           &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; DatagramPacket&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;content&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;().&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;retain&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(),&lt;/span&gt; p&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sender&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;());&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				                       &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+				                       &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+				                           &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Mono&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;error&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Exception&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Unexpected type of the message: &amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; o&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+				                       &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+				                   &lt;span style=&#34;color:#f92672&#34;&gt;})))&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 接收从远端发过来的数据&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;75生命周期回调&#34;&gt;7.5.生命周期回调&lt;/h1&gt;
+&lt;p&gt;下面的生命周期回调用参数是提供给您用来扩展&lt;code&gt;UdpServer&lt;/code&gt;的：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Callback&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doOnBind&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;当服务器channel即将被绑定的时候调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doOnBound&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;当服务器channel已经被绑定的时候调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doOnChannelInit&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;当channel初始化的时候被调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;doOnUnbound&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;当服务器channel解绑的时候被调用。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;下面是使用&lt;code&gt;doOnBound&lt;/code&gt;和&lt;code&gt;doOnChannelInit&lt;/code&gt;回调的例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/lifecycle/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.handler.codec.LineBasedFrameDecoder&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.handler.logging.LoggingHandler&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;doOnBound&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;conn &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; conn&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;addHandler&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; LineBasedFrameDecoder&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;8192&lt;span style=&#34;color:#f92672&#34;&gt;)))&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;doOnChannelInit&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;((&lt;/span&gt;observer&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; channel&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; remoteAddress&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt;
+				             channel&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;pipeline&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				                    &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;addFirst&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; LoggingHandler&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.examples&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)))&lt;/span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;2&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 当channel绑定的时候添加一个&lt;code&gt;LineBasedFrameDecoder&lt;/code&gt;到&lt;code&gt;Netty&lt;/code&gt; pipeline。&lt;/p&gt;
+&lt;p&gt;&amp;lt;2&amp;gt; 当初始化channel的时候添加一个&lt;code&gt;LoggingHandler&lt;/code&gt;到&lt;code&gt;Netty&lt;/code&gt; pipeline。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&#34;76连接配置&#34;&gt;7.6.连接配置&lt;/h1&gt;
+&lt;p&gt;这一章将给您介绍以下三种UDP层的配置方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#761channel-options&#34;&gt;Channel Options&lt;/a&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#762wire-logger&#34;&gt;Wire Logger&lt;/a&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#763event-loop-group&#34;&gt;Event Loop Group&lt;/a&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;761channel-options&#34;&gt;7.6.1.Channel Options&lt;/h2&gt;
+&lt;p&gt;默认情况下，&lt;code&gt;UDP&lt;/code&gt;服务器配置了以下options：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/udp/UdpServerBind.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;UdpServerBind&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;config&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; UdpServerConfig&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
+      Collections&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;singletonMap&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;ChannelOption&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;AUTO_READ&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;),&lt;/span&gt;
+      &lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; InetSocketAddress&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;NetUtil&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;LOCALHOST&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; DEFAULT_PORT&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;p&gt;如果需要添加新的option或者修改已有的option，您可以使用如下的方式：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/channeloptions/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.channel.ChannelOption&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;option&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;ChannelOption&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;CONNECT_TIMEOUT_MILLIS&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; 10000&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;p&gt;您可以通过以下的链接找到更多关于Netty channel options的信息：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://netty.io/4.1/api/io/netty/channel/ChannelOption.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;ChannelOption&lt;/code&gt;&lt;/a&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/net/socketOpt.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Socket Options&lt;/a&gt;
+&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;762wire-logger&#34;&gt;7.6.2.Wire Logger&lt;/h2&gt;
+&lt;p&gt;Reactor Netty提供了线路记录（wire logging）用来检查点对点的流量。默认情况下，线路记录是关闭的。如果想要开启它，您必须将日志&lt;code&gt;reactor.netty.udp.UdpServer&lt;/code&gt;的设置为&lt;code&gt;DEBUG&lt;/code&gt;等级并且按如下方式进行配置：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/wiretap/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;wiretap&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启线路记录&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;默认情况下，线路记录在输出内容的时候会使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#HEX_DUMP&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#HEX_DUMP&lt;/a&gt;
+。您也可以通过配置&lt;code&gt;UdpServer&lt;/code&gt;改为&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#SIMPLE&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#SIMPLE&lt;/a&gt;
+或者&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#TEXTUAL&lt;/a&gt;
+：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/wiretap/custom/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; io.netty.handler.logging.LogLevel&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.transport.logging.AdvancedByteBufFormat&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;wiretap&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;logger-name&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; LogLevel&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;DEBUG&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; AdvancedByteBufFormat&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;TEXTUAL&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+  &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启线路记录并使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;AdvancedByteBufFormat#TEXTUAL&lt;/a&gt;
+来输出内容。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;763event-loop-group&#34;&gt;7.6.3.Event Loop Group&lt;/h2&gt;
+&lt;p&gt;默认情况下，UDP服务器使用&amp;quot;Event Loop Group&amp;quot;，工作线程数等于初始化的时候可以用的处理器数量（但最小是4）。您也可以使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/resources/LoopResources.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;LoopResource&lt;/a&gt;
+&lt;code&gt;#create&lt;/code&gt;其中的一个方法来修改配置。&lt;/p&gt;
+&lt;p&gt;默认的&lt;code&gt;Event Loop Group&lt;/code&gt;配置如下：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default worker thread count, fallback to available processor
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * (but with a minimum value of 4)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String IO_WORKER_COUNT &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.ioWorkerCount&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default selector thread count, fallback to -1 (no selector thread)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String IO_SELECT_COUNT &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.ioSelectCount&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default worker thread count for UDP, fallback to available processor
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * (but with a minimum value of 4)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String UDP_IO_THREAD_COUNT &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.udp.ioThreadCount&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default quiet period that guarantees that the disposal of the underlying LoopResources
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * will not happen, fallback to 2 seconds.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String SHUTDOWN_QUIET_PERIOD &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.ioShutdownQuietPeriod&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default maximum amount of time to wait until the disposal of the underlying LoopResources
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * regardless if a task was submitted during the quiet period, fallback to 15 seconds.
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String SHUTDOWN_TIMEOUT &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.ioShutdownTimeout&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;/**
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default value whether the native transport (epoll, kqueue) will be preferred,
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * fallback it will be preferred when available
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; */&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; String NATIVE &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reactor.netty.native&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;p&gt;如果需要修改这些设置，您也可以通过如下方式进行配置：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/eventloop/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.resources.LoopResources&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		LoopResources loop &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; LoopResources&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;event-loop&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; 1&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; 4&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
+
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;runOn&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;loop&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+&lt;h1 id=&#34;77度量&#34;&gt;7.7.度量&lt;/h1&gt;
+&lt;p&gt;UDP服务器支持与&lt;a href=&#34;https://micrometer.io/&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Micrometer&lt;/a&gt;
+的内置集成。它暴露了所有前缀为&lt;code&gt;reactor.netty.udp.server&lt;/code&gt;的度量。&lt;/p&gt;
+&lt;p&gt;下面的表格提供了UDP服务器度量的相关信息：&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;度量名称&lt;/th&gt;
+&lt;th&gt;类型&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.udp.server.data.received&lt;/td&gt;
+&lt;td&gt;DistributionSummary&lt;/td&gt;
+&lt;td&gt;收到的数据量，以字节为单位&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.udp.server.data.sent&lt;/td&gt;
+&lt;td&gt;DistributionSummary&lt;/td&gt;
+&lt;td&gt;发送的数据量，以字节为单位&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.udp.server.errors&lt;/td&gt;
+&lt;td&gt;Counter&lt;/td&gt;
+&lt;td&gt;发生的错误数量&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;下面额外的度量也是可用的：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ByteBufAllocator&lt;/code&gt;度量&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;度量名称&lt;/th&gt;
+&lt;th&gt;类型&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.heap.memory&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;堆内存的字节数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.direct.memory&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;堆外内存的字节数&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.heap.arenas&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;堆内存的个数（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.direct.arenas&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;堆外内存的个数（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.threadlocal.caches&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;threadlocal的缓存数量（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.tiny.cache.size&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;微小缓存的大小（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.small.cache.size&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;小缓存的大小（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.normal.cache.size&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;一般缓存的大小（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;reactor.netty.bytebuf.allocator.used.chunk.size&lt;/td&gt;
+&lt;td&gt;Gauge&lt;/td&gt;
+&lt;td&gt;一个区域的块大小（当使用&lt;code&gt;PooledByteBufAllocator&lt;/code&gt;的时候）&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;下面是开启集成的度量的例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/metrics/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;metrics&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启内建集成的Micrometer&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如果您想让UDP服务端度量与除了&lt;code&gt;Micrometer&lt;/code&gt;之外的系统集成或者想提供自己与&lt;code&gt;Micrometer&lt;/code&gt;的集成来添加自己的度量记录器，您可以按如下方式实现：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/metrics/custom/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.Connection&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.channel.ChannelMetricsRecorder&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.udp.UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.net.SocketAddress&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		Connection server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				UdpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;metrics&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; CustomChannelMetricsRecorder&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;Duration&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;ofSeconds&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;30&lt;span style=&#34;color:#f92672&#34;&gt;));&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启UDP服务端度量并且提供&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/channel/ChannelMetricsRecorder.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;ChannelMetricsRecorder&lt;/code&gt;&lt;/a&gt;
+的实现。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/edit/master/docs/asciidoc/udp-server.adoc&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Suggest Edit&lt;/a&gt;
+ to &amp;ldquo;&lt;a href=&#34;https://projectreactor.io/docs/netty/release/reference/index.html#udp-server&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;UDP Server&lt;/a&gt;
+&amp;rdquo;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;目录contents-1&#34;&gt;&lt;a href=&#34;../contents&#34;&gt;目录&lt;/a&gt;
+&lt;/h2&gt;</description>
+    </item>
     
     <item>
       <title>Reactor Netty参考指南 - 6.HTTP客户端</title>
@@ -2362,17 +3478,23 @@ hello
 		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
 	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 当一个远程客户端连接的时候添加了一个&lt;code&gt;ReadTimeoutHandler&lt;/code&gt;到&lt;code&gt;Netty&lt;/code&gt; pipeline。&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 当一个channel连接上之后添加了一个&lt;code&gt;ReadTimeoutHandler&lt;/code&gt;到&lt;code&gt;Netty&lt;/code&gt; pipeline。&lt;/p&gt;
 &lt;p&gt;&amp;lt;2&amp;gt; 当初始化channel的时候添加了一个&lt;code&gt;LoggingHandler&lt;/code&gt;到&lt;code&gt;Netty&lt;/code&gt; pipeline。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h1 id=&#34;46tcp层面的配置&#34;&gt;4.6.TCP层面的配置&lt;/h1&gt;
 &lt;p&gt;这一章节描述了三种TCP层面的配置方式：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;#461channel-options&#34;&gt;Channel Options&lt;/a&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#461channel-options&#34;&gt;Channel Options&lt;/a&gt;
+&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#462wire-logger&#34;&gt;Wire Logger&lt;/a&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#462wire-logger&#34;&gt;Wire Logger&lt;/a&gt;
+&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#463event-loop-group&#34;&gt;Event Loop Group&lt;/a&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#463event-loop-group&#34;&gt;Event Loop Group&lt;/a&gt;
+&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;461channel-options&#34;&gt;4.6.1.Channel Options&lt;/h2&gt;
@@ -2410,9 +3532,13 @@ hello
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
 &lt;p&gt;您可以通过以下的链接找到更多关于&lt;code&gt;Netty&lt;/code&gt;channel options的信息：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://netty.io/4.1/api/io/netty/channel/ChannelOption.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;ChannelOption&lt;/a&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://netty.io/4.1/api/io/netty/channel/ChannelOption.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;ChannelOption&lt;/a&gt;
+&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/net/socketOpt.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Socket Options&lt;/a&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.oracle.com/javase/8/docs/technotes/guides/net/socketOpt.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;Socket Options&lt;/a&gt;
+&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h1 id=&#34;462wire-logger&#34;&gt;4.6.2.Wire Logger&lt;/h1&gt;
@@ -2468,7 +3594,7 @@ hello
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;463event-loop-group&#34;&gt;4.6.3.Event Loop Group&lt;/h2&gt;
 &lt;p&gt;默认情况下，&lt;code&gt;TCP&lt;/code&gt;客户端使用一个&amp;quot;Event Loop Group&amp;quot;，工作线程数等于初始化的时候可以用的处理器数量（但最小是4）。您也可以使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/resources/LoopResources.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;LoopResource&lt;/a&gt;
-&lt;code&gt;#server&lt;/code&gt;其中的一个方法来修改配置。&lt;/p&gt;
+&lt;code&gt;#create&lt;/code&gt;其中的一个方法来修改配置。&lt;/p&gt;
 &lt;p&gt;默认的&lt;code&gt;Event Loop Group&lt;/code&gt;配置如下：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/p&gt;
@@ -2955,11 +4081,13 @@ hello
 		connection&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
 		          &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
 	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启TCP客户端度量并且提供&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/channel/ChannelMetricsRecorder.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;ChannelMetricsRecorder&lt;/code&gt;&lt;/a&gt;
 的实现。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h1 id=&#34;411unix域套接字&#34;&gt;4.11.Unix域套接字&lt;/h1&gt;
-&lt;p&gt;当使用本地传输时，&lt;code&gt;TCP&lt;/code&gt;服务器支持Unix域套接字（UDS）。&lt;/p&gt;
+&lt;p&gt;当使用本地传输时，&lt;code&gt;TCP&lt;/code&gt;客户端支持Unix域套接字（UDS）。&lt;/p&gt;
 &lt;p&gt;下面是使用UDS的例子：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/client/uds/Application.java&lt;/p&gt;
@@ -3311,11 +4439,17 @@ hello
 &lt;h1 id=&#34;36tcp层面的配置&#34;&gt;3.6.TCP层面的配置&lt;/h1&gt;
 &lt;p&gt;这一章节描述了三种TCP层面的配置方式：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;#361%e8%ae%be%e7%bd%aechannel-options&#34;&gt;设置Channel Options&lt;/a&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#361%e8%ae%be%e7%bd%aechannel-options&#34;&gt;设置Channel Options&lt;/a&gt;
+&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#362%e4%bd%bf%e7%94%a8wire-logger&#34;&gt;使用Wire Logger&lt;/a&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#362%e4%bd%bf%e7%94%a8wire-logger&#34;&gt;使用Wire Logger&lt;/a&gt;
+&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#363%e4%bd%bf%e7%94%a8event-loop-group&#34;&gt;使用Event Loop Group&lt;/a&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a href=&#34;#363%e4%bd%bf%e7%94%a8event-loop-group&#34;&gt;使用Event Loop Group&lt;/a&gt;
+&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id=&#34;361设置channel-options&#34;&gt;3.6.1.设置Channel Options&lt;/h2&gt;
@@ -3408,7 +4542,7 @@ hello
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;363使用event-loop-group&#34;&gt;3.6.3.使用Event Loop Group&lt;/h2&gt;
 &lt;p&gt;默认情况下，&lt;code&gt;TCP&lt;/code&gt;服务器使用一个&amp;quot;Event Loop Group&amp;quot;，工作线程数等于初始化的时候可以用的处理器数量（但最小是4）。您也可以使用&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/resources/LoopResources.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;LoopResource&lt;/a&gt;
-&lt;code&gt;#server&lt;/code&gt;其中的一个方法来修改配置。&lt;/p&gt;
+&lt;code&gt;#create&lt;/code&gt;其中的一个方法来修改配置。&lt;/p&gt;
 &lt;p&gt;默认的&lt;code&gt;Event Loop Group&lt;/code&gt;配置如下：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/p&gt;
@@ -3644,6 +4778,31 @@ hello
 	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启内建集成的Micrometer&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如果您想让TCP服务端度量与除了&lt;code&gt;Micrometer&lt;/code&gt;之外的系统集成或者想提供自己与&lt;code&gt;Micrometer&lt;/code&gt;的集成来添加自己的度量记录器，您可以按如下方式实现：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/tcp/server/metrics/custom/Application.java&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.DisposableServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.channel.ChannelMetricsRecorder&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; reactor.netty.tcp.TcpServer&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.net.SocketAddress&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;import&lt;/span&gt; java.time.Duration&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;class&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Application&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;String&lt;span style=&#34;color:#f92672&#34;&gt;[]&lt;/span&gt; args&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
+		DisposableServer server &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+				TcpServer&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;create&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;metrics&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; CustomChannelMetricsRecorder&lt;span style=&#34;color:#f92672&#34;&gt;::&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;//&amp;lt;1&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;				         &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;bindNow&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+
+		server&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;onDispose&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt;
+		      &lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;block&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;();&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&amp;lt;1&amp;gt; 开启TCP服务端度量并且提供&lt;a href=&#34;https://projectreactor.io/docs/netty/release/api/reactor/netty/channel/ChannelMetricsRecorder.html&#34;target=&#34;_blank&#34; rel=&#34;noopener noreferrer&#34;&gt;&lt;code&gt;ChannelMetricsRecorder&lt;/code&gt;&lt;/a&gt;
+的实现。&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h1 id=&#34;39unix域套接字&#34;&gt;3.9.Unix域套接字&lt;/h1&gt;
 &lt;p&gt;当使用本地传输时，&lt;code&gt;TCP&lt;/code&gt;服务器支持Unix域套接字（UDS）。&lt;/p&gt;
@@ -3943,8 +5102,10 @@ hello
 &lt;/h1&gt;
 &lt;h1 id=&#34;6http客户端http-client&#34;&gt;&lt;a href=&#34;../http-client&#34;&gt;6.HTTP客户端&lt;/a&gt;
 &lt;/h1&gt;
-&lt;h1 id=&#34;7udp服务端&#34;&gt;7.UDP服务端&lt;/h1&gt;
-&lt;h1 id=&#34;8udp客户端&#34;&gt;8.UDP客户端&lt;/h1&gt;</description>
+&lt;h1 id=&#34;7udp服务端udp-server&#34;&gt;&lt;a href=&#34;../udp-server&#34;&gt;7.UDP服务端&lt;/a&gt;
+&lt;/h1&gt;
+&lt;h1 id=&#34;8udp客户端udp-client&#34;&gt;&lt;a href=&#34;../udp-client&#34;&gt;8.UDP客户端&lt;/a&gt;
+&lt;/h1&gt;</description>
     </item>
     
     <item>

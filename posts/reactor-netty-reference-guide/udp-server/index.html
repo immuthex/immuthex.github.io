@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.80.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 7.UDP服务端&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第七章（UDP服务端）的中文翻译" /><link rel="stylesheet" href="/css/core.min.f50770753e7b4a1cf823b8241022bf5a6908ecbc3cfcba59bfb76af28f94cceda372fd3dad1f0b6fb6592fd79f9fc1f3.css" integrity="sha384-9QdwdT57Shz4I7gkECK/WmkI7Lw8/LpZv7dq8o&#43;UzO2jcv09rR8Lb7ZZL9efn8Hz"><meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Reactor Netty参考指南 - 7.UDP服务端" /><body><section id="header">
+    <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Immuthex的博客</span></a></span>
+        <span class="header right-side"><div class="nav wrap">
+    <nav class="nav"><a class="nav item" href="/categories/">分类</a><a class="nav item" href="/tags/">标签</a><a class="nav item" href="https://github.com/immuthex" target="_blank" one-link-mark="yes"><span
+                class="iconfont icon-github"></span>&nbsp;Github</a>
+    </nav>
+</div></span></div></section><section id="content"><div class="article-container"><section class="article header">
+    <h1 class="article title">Reactor Netty参考指南 - 7.UDP服务端</h1><p class="article date">2021-03-11</p></section><article class="article markdown-body"><h2 id="目录contents"><a href="../contents">目录</a>
+</h2>
+<hr>
+<h1 id="原文地址httpsprojectreactoriodocsnettyreleasereferenceindexhtmludp-server"><a href="https://projectreactor.io/docs/netty/release/reference/index.html#udp-server"target="_blank" rel="noopener noreferrer">原文地址</a>
+</h1>
+<p><code>Reactor Netty</code>提供了易于使用和配置的<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpServer.html"target="_blank" rel="noopener noreferrer"><code>UdpServer</code></a>
+ 。它隐藏了创建<code>UDP</code>服务器所需的大部分<code>Netty</code>的功能，并增加了<code>Reactive Streams</code>背压。</p>
+<h1 id="71启动和停止">7.1.启动和停止</h1>
+<p>如果要启动一个<code>UDP</code>服务器，您必须创建并且配置一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpServer.html"target="_blank" rel="noopener noreferrer"><code>UdpServer</code></a>
+实例对象。默认情况下，host为<code>localhost</code>，port为<code>12012</code>。下面是创建并且启动一个<code>UdpServer</code>服务器的例子：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/create/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>                         <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span> <span style="color:#75715e">//&lt;2&gt;
+</span><span style="color:#75715e"></span>
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 创建一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpServer.html"target="_blank" rel="noopener noreferrer"><code>UdpServer</code></a>
+实例用来做配置操作。</p>
+<p>&lt;2&gt; 使用阻塞等待的方式启动服务器，直到初始化完成。</p>
+</blockquote>
+<p>返回的<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/Connection.html"target="_blank" rel="noopener noreferrer"><code>Connection</code></a>
+提供了简单的服务器API，包括<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/DisposableChannel.html#disposeNow-java.time.Duration-"target="_blank" rel="noopener noreferrer"><code>disposeNow()</code></a>
+，这个方法可以以阻塞等待的方式来关闭服务器。</p>
+<h2 id="711host和port">7.1.1.Host和Port</h2>
+<p>想要设置特定<code>host</code>和<code>port</code>，您可以用下面的方式来配置<code>UDP</code>服务器：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/address/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">host</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;localhost&#34;</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">port</span><span style="color:#f92672">(</span>8080<span style="color:#f92672">)</span>        <span style="color:#75715e">//&lt;2&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 配置<code>UDP</code>服务器的host</p>
+<p>&lt;2&gt; 配置<code>UDP</code>服务器的port</p>
+</blockquote>
+<h1 id="72预先初始化">7.2.预先初始化</h1>
+<p>默认情况下，<code>UdpServer</code>初始化资源的操作在需要使用的时候才进行。这意味着初始化加载的时候<code>bind operation</code>会占用额外的时间：</p>
+<ul>
+<li>
+<p>事件循环组</p>
+</li>
+<li>
+<p>native传输库（当使用了native传输的时候）</p>
+</li>
+</ul>
+<p>当您需要预加载这些资源的时候，您可以按照以下方式来配置<code>UdpServer</code>：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/warmup/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.socket.DatagramPacket<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		UdpServer udpServer <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">handle</span><span style="color:#f92672">((</span>in<span style="color:#f92672">,</span> out<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+				             out<span style="color:#f92672">.</span><span style="color:#a6e22e">sendObject</span><span style="color:#f92672">(</span>
+				                 in<span style="color:#f92672">.</span><span style="color:#a6e22e">receiveObject</span><span style="color:#f92672">()</span>
+				                   <span style="color:#f92672">.</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>o <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+				                       <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>o <span style="color:#66d9ef">instanceof</span> DatagramPacket<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				                           DatagramPacket p <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>DatagramPacket<span style="color:#f92672">)</span> o<span style="color:#f92672">;</span>
+				                           <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> DatagramPacket<span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">content</span><span style="color:#f92672">().</span><span style="color:#a6e22e">retain</span><span style="color:#f92672">(),</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">sender</span><span style="color:#f92672">());</span>
+				                       <span style="color:#f92672">}</span>
+				                       <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+				                           <span style="color:#66d9ef">return</span> Mono<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Exception<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Unexpected type of the message: &#34;</span> <span style="color:#f92672">+</span> o<span style="color:#f92672">));</span>
+				                       <span style="color:#f92672">}</span>
+				                   <span style="color:#f92672">})));</span>
+
+		udpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">warmup</span><span style="color:#f92672">()</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>		         <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+
+		Connection server <span style="color:#f92672">=</span> udpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 初始化和加载事件循环组和native传输库</p>
+</blockquote>
+<h1 id="73写出数据">7.3.写出数据</h1>
+<p>如果要发送数据到一个已连接的客户端，您必须添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpOutbound.html"target="_blank" rel="noopener noreferrer"><code>UdpOutbound</code></a>
+来写出数据。下面是一个发送<code>hello</code>字符串的例子：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/send/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.buffer.ByteBuf<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> io.netty.buffer.Unpooled<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> io.netty.channel.socket.DatagramPacket<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> io.netty.util.CharsetUtil<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">handle</span><span style="color:#f92672">((</span>in<span style="color:#f92672">,</span> out<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+				             out<span style="color:#f92672">.</span><span style="color:#a6e22e">sendObject</span><span style="color:#f92672">(</span>
+				                 in<span style="color:#f92672">.</span><span style="color:#a6e22e">receiveObject</span><span style="color:#f92672">()</span>
+				                   <span style="color:#f92672">.</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>o <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+				                       <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>o <span style="color:#66d9ef">instanceof</span> DatagramPacket<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				                           DatagramPacket p <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>DatagramPacket<span style="color:#f92672">)</span> o<span style="color:#f92672">;</span>
+				                           ByteBuf buf <span style="color:#f92672">=</span> Unpooled<span style="color:#f92672">.</span><span style="color:#a6e22e">copiedBuffer</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hello&#34;</span><span style="color:#f92672">,</span> CharsetUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">UTF_8</span><span style="color:#f92672">);</span>
+				                           <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> DatagramPacket<span style="color:#f92672">(</span>buf<span style="color:#f92672">,</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">sender</span><span style="color:#f92672">());</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				                       <span style="color:#f92672">}</span>
+				                       <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+				                           <span style="color:#66d9ef">return</span> Mono<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Exception<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Unexpected type of the message: &#34;</span> <span style="color:#f92672">+</span> o<span style="color:#f92672">));</span>
+				                       <span style="color:#f92672">}</span>
+				                   <span style="color:#f92672">})))</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 发送一个<code>hello</code>字符串到远端</p>
+</blockquote>
+<h1 id="74消费数据">7.4.消费数据</h1>
+<p>如果要接收从远端发过来的数据，您必须添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpInbound.html"target="_blank" rel="noopener noreferrer"><code>UdpInbound</code></a>
+来读取数据。示例如下：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/read/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.socket.DatagramPacket<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">handle</span><span style="color:#f92672">((</span>in<span style="color:#f92672">,</span> out<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+				             out<span style="color:#f92672">.</span><span style="color:#a6e22e">sendObject</span><span style="color:#f92672">(</span>
+				                 in<span style="color:#f92672">.</span><span style="color:#a6e22e">receiveObject</span><span style="color:#f92672">()</span>
+				                   <span style="color:#f92672">.</span><span style="color:#a6e22e">map</span><span style="color:#f92672">(</span>o <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+				                       <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>o <span style="color:#66d9ef">instanceof</span> DatagramPacket<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				                           DatagramPacket p <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>DatagramPacket<span style="color:#f92672">)</span> o<span style="color:#f92672">;</span>
+				                           <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> DatagramPacket<span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">content</span><span style="color:#f92672">().</span><span style="color:#a6e22e">retain</span><span style="color:#f92672">(),</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">sender</span><span style="color:#f92672">());</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				                       <span style="color:#f92672">}</span>
+				                       <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+				                           <span style="color:#66d9ef">return</span> Mono<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Exception<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Unexpected type of the message: &#34;</span> <span style="color:#f92672">+</span> o<span style="color:#f92672">));</span>
+				                       <span style="color:#f92672">}</span>
+				                   <span style="color:#f92672">})))</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 接收从远端发过来的数据</p>
+</blockquote>
+<h1 id="75生命周期回调">7.5.生命周期回调</h1>
+<p>下面的生命周期回调用参数是提供给您用来扩展<code>UdpServer</code>的：</p>
+<table>
+<thead>
+<tr>
+<th>Callback</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>doOnBind</code></td>
+<td>当服务器channel即将被绑定的时候调用。</td>
+</tr>
+<tr>
+<td><code>doOnBound</code></td>
+<td>当服务器channel已经被绑定的时候调用。</td>
+</tr>
+<tr>
+<td><code>doOnChannelInit</code></td>
+<td>当channel初始化的时候被调用。</td>
+</tr>
+<tr>
+<td><code>doOnUnbound</code></td>
+<td>当服务器channel解绑的时候被调用。</td>
+</tr>
+</tbody>
+</table>
+<p>下面是使用<code>doOnBound</code>和<code>doOnChannelInit</code>回调的例子：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/lifecycle/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.codec.LineBasedFrameDecoder<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> io.netty.handler.logging.LoggingHandler<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">doOnBound</span><span style="color:#f92672">(</span>conn <span style="color:#f92672">-&gt;</span> conn<span style="color:#f92672">.</span><span style="color:#a6e22e">addHandler</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> LineBasedFrameDecoder<span style="color:#f92672">(</span>8192<span style="color:#f92672">)))</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">doOnChannelInit</span><span style="color:#f92672">((</span>observer<span style="color:#f92672">,</span> channel<span style="color:#f92672">,</span> remoteAddress<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span>
+				             channel<span style="color:#f92672">.</span><span style="color:#a6e22e">pipeline</span><span style="color:#f92672">()</span>
+				                    <span style="color:#f92672">.</span><span style="color:#a6e22e">addFirst</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> LoggingHandler<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;reactor.netty.examples&#34;</span><span style="color:#f92672">)))</span>  <span style="color:#75715e">//&lt;2&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 当channel绑定的时候添加一个<code>LineBasedFrameDecoder</code>到<code>Netty</code> pipeline。</p>
+<p>&lt;2&gt; 当初始化channel的时候添加一个<code>LoggingHandler</code>到<code>Netty</code> pipeline。</p>
+</blockquote>
+<h1 id="76连接配置">7.6.连接配置</h1>
+<p>这一章将给您介绍以下三种UDP层的配置方式：</p>
+<ul>
+<li>
+<p><a href="#761channel-options">Channel Options</a>
+</p>
+</li>
+<li>
+<p><a href="#762wire-logger">Wire Logger</a>
+</p>
+</li>
+<li>
+<p><a href="#763event-loop-group">Event Loop Group</a>
+</p>
+</li>
+</ul>
+<h2 id="761channel-options">7.6.1.Channel Options</h2>
+<p>默认情况下，<code>UDP</code>服务器配置了以下options：</p>
+<blockquote>
+<p>./../../reactor-netty-core/src/main/java/reactor/netty/udp/UdpServerBind.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">UdpServerBind<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+  <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">config</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> UdpServerConfig<span style="color:#f92672">(</span>
+      Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">singletonMap</span><span style="color:#f92672">(</span>ChannelOption<span style="color:#f92672">.</span><span style="color:#a6e22e">AUTO_READ</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">),</span>
+      <span style="color:#f92672">()</span> <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">new</span> InetSocketAddress<span style="color:#f92672">(</span>NetUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">LOCALHOST</span><span style="color:#f92672">,</span> DEFAULT_PORT<span style="color:#f92672">));</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<p>如果需要添加新的option或者修改已有的option，您可以使用如下的方式：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/channeloptions/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.ChannelOption<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">option</span><span style="color:#f92672">(</span>ChannelOption<span style="color:#f92672">.</span><span style="color:#a6e22e">CONNECT_TIMEOUT_MILLIS</span><span style="color:#f92672">,</span> 10000<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<p>您可以通过以下的链接找到更多关于Netty channel options的信息：</p>
+<ul>
+<li>
+<p><a href="https://netty.io/4.1/api/io/netty/channel/ChannelOption.html"target="_blank" rel="noopener noreferrer"><code>ChannelOption</code></a>
+</p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/javase/8/docs/technotes/guides/net/socketOpt.html"target="_blank" rel="noopener noreferrer">Socket Options</a>
+</p>
+</li>
+</ul>
+<h2 id="762wire-logger">7.6.2.Wire Logger</h2>
+<p>Reactor Netty提供了线路记录（wire logging）用来检查点对点的流量。默认情况下，线路记录是关闭的。如果想要开启它，您必须将日志<code>reactor.netty.udp.UdpServer</code>的设置为<code>DEBUG</code>等级并且按如下方式进行配置：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/wiretap/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">wiretap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 开启线路记录</p>
+</blockquote>
+<p>默认情况下，线路记录在输出内容的时候会使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#HEX_DUMP"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#HEX_DUMP</a>
+。您也可以通过配置<code>UdpServer</code>改为<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#SIMPLE"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#SIMPLE</a>
+或者<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#TEXTUAL</a>
+：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/wiretap/custom/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.logging.LogLevel<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.transport.logging.AdvancedByteBufFormat<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">wiretap</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;logger-name&#34;</span><span style="color:#f92672">,</span> LogLevel<span style="color:#f92672">.</span><span style="color:#a6e22e">DEBUG</span><span style="color:#f92672">,</span> AdvancedByteBufFormat<span style="color:#f92672">.</span><span style="color:#a6e22e">TEXTUAL</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+  <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 开启线路记录并使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#TEXTUAL</a>
+来输出内容。</p>
+</blockquote>
+<h2 id="763event-loop-group">7.6.3.Event Loop Group</h2>
+<p>默认情况下，UDP服务器使用&quot;Event Loop Group&quot;，工作线程数等于初始化的时候可以用的处理器数量（但最小是4）。您也可以使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/resources/LoopResources.html"target="_blank" rel="noopener noreferrer">LoopResource</a>
+<code>#create</code>其中的一个方法来修改配置。</p>
+<p>默认的<code>Event Loop Group</code>配置如下：</p>
+<blockquote>
+<p>./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default worker thread count, fallback to available processor
+</span><span style="color:#75715e"> * (but with a minimum value of 4)
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String IO_WORKER_COUNT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.ioWorkerCount&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default selector thread count, fallback to -1 (no selector thread)
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String IO_SELECT_COUNT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.ioSelectCount&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default worker thread count for UDP, fallback to available processor
+</span><span style="color:#75715e"> * (but with a minimum value of 4)
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String UDP_IO_THREAD_COUNT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.udp.ioThreadCount&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default quiet period that guarantees that the disposal of the underlying LoopResources
+</span><span style="color:#75715e"> * will not happen, fallback to 2 seconds.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String SHUTDOWN_QUIET_PERIOD <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.ioShutdownQuietPeriod&#34;</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default maximum amount of time to wait until the disposal of the underlying LoopResources
+</span><span style="color:#75715e"> * regardless if a task was submitted during the quiet period, fallback to 15 seconds.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String SHUTDOWN_TIMEOUT <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.ioShutdownTimeout&#34;</span><span style="color:#f92672">;</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Default value whether the native transport (epoll, kqueue) will be preferred,
+</span><span style="color:#75715e"> * fallback it will be preferred when available
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String NATIVE <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;reactor.netty.native&#34;</span><span style="color:#f92672">;</span>
+</code></pre></div></blockquote>
+<p>如果需要修改这些设置，您也可以通过如下方式进行配置：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/eventloop/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.resources.LoopResources<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		LoopResources loop <span style="color:#f92672">=</span> LoopResources<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;event-loop&#34;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> 4<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">runOn</span><span style="color:#f92672">(</span>loop<span style="color:#f92672">)</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></blockquote>
+<h1 id="77度量">7.7.度量</h1>
+<p>UDP服务器支持与<a href="https://micrometer.io/"target="_blank" rel="noopener noreferrer">Micrometer</a>
+的内置集成。它暴露了所有前缀为<code>reactor.netty.udp.server</code>的度量。</p>
+<p>下面的表格提供了UDP服务器度量的相关信息：</p>
+<table>
+<thead>
+<tr>
+<th>度量名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reactor.netty.udp.server.data.received</td>
+<td>DistributionSummary</td>
+<td>收到的数据量，以字节为单位</td>
+</tr>
+<tr>
+<td>reactor.netty.udp.server.data.sent</td>
+<td>DistributionSummary</td>
+<td>发送的数据量，以字节为单位</td>
+</tr>
+<tr>
+<td>reactor.netty.udp.server.errors</td>
+<td>Counter</td>
+<td>发生的错误数量</td>
+</tr>
+</tbody>
+</table>
+<p>下面额外的度量也是可用的：</p>
+<p><code>ByteBufAllocator</code>度量</p>
+<table>
+<thead>
+<tr>
+<th>度量名称</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.heap.memory</td>
+<td>Gauge</td>
+<td>堆内存的字节数</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.direct.memory</td>
+<td>Gauge</td>
+<td>堆外内存的字节数</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.heap.arenas</td>
+<td>Gauge</td>
+<td>堆内存的个数（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.direct.arenas</td>
+<td>Gauge</td>
+<td>堆外内存的个数（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.threadlocal.caches</td>
+<td>Gauge</td>
+<td>threadlocal的缓存数量（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.tiny.cache.size</td>
+<td>Gauge</td>
+<td>微小缓存的大小（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.small.cache.size</td>
+<td>Gauge</td>
+<td>小缓存的大小（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.normal.cache.size</td>
+<td>Gauge</td>
+<td>一般缓存的大小（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+<tr>
+<td>reactor.netty.bytebuf.allocator.used.chunk.size</td>
+<td>Gauge</td>
+<td>一个区域的块大小（当使用<code>PooledByteBufAllocator</code>的时候）</td>
+</tr>
+</tbody>
+</table>
+<p>下面是开启集成的度量的例子：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/metrics/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">metrics</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 开启内建集成的Micrometer</p>
+</blockquote>
+<p>如果您想让UDP服务端度量与除了<code>Micrometer</code>之外的系统集成或者想提供自己与<code>Micrometer</code>的集成来添加自己的度量记录器，您可以按如下方式实现：</p>
+<blockquote>
+<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/server/metrics/custom/Application.java</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.channel.ChannelMetricsRecorder<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> reactor.netty.udp.UdpServer<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.net.SocketAddress<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
+
+	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		Connection server <span style="color:#f92672">=</span>
+				UdpServer<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">()</span>
+				         <span style="color:#f92672">.</span><span style="color:#a6e22e">metrics</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> CustomChannelMetricsRecorder<span style="color:#f92672">::</span><span style="color:#66d9ef">new</span><span style="color:#f92672">)</span> <span style="color:#75715e">//&lt;1&gt;
+</span><span style="color:#75715e"></span>				         <span style="color:#f92672">.</span><span style="color:#a6e22e">bindNow</span><span style="color:#f92672">(</span>Duration<span style="color:#f92672">.</span><span style="color:#a6e22e">ofSeconds</span><span style="color:#f92672">(</span>30<span style="color:#f92672">));</span>
+
+		server<span style="color:#f92672">.</span><span style="color:#a6e22e">onDispose</span><span style="color:#f92672">()</span>
+		      <span style="color:#f92672">.</span><span style="color:#a6e22e">block</span><span style="color:#f92672">();</span>
+	<span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><p>&lt;1&gt; 开启UDP服务端度量并且提供<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/channel/ChannelMetricsRecorder.html"target="_blank" rel="noopener noreferrer"><code>ChannelMetricsRecorder</code></a>
+的实现。</p>
+</blockquote>
+<p><a href="https://github.com/reactor/reactor-netty/edit/master/docs/asciidoc/udp-server.adoc"target="_blank" rel="noopener noreferrer">Suggest Edit</a>
+ to &ldquo;<a href="https://projectreactor.io/docs/netty/release/reference/index.html#udp-server"target="_blank" rel="noopener noreferrer">UDP Server</a>
+&rdquo;</p>
+<hr>
+<h2 id="目录contents-1"><a href="../contents">目录</a>
+</h2></article><section class="article labels"><a class="category" href=/categories/%E7%BF%BB%E8%AF%91/>翻译</a><a class="tag" href=/tags/reactor-netty/>reactor netty</a></section><section class="article license">版权声明：如需转载，请带上本文链接、注明来源和本声明。否则将追究法律责任。https://www.immuthex.com/posts/reactor-netty-reference-guide/udp-server/</section><section class="article author"><div class="details"><a class="item" href="https://github.com/immuthex" target="_blank" rel="noopener noreferrer"><span class="iconfont icon-github"></span>&nbsp;immuthex</a></div>
+</section>
+</div>
+<div class="article bottom"><section class="article navigation"><p><a class="link" href="/posts/reactor-netty-reference-guide/udp-client/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 8.UDP客户端</a></p><p><a class="link" href="/posts/reactor-netty-reference-guide/http-client/"><span class="iconfont icon-article"></span>Reactor Netty参考指南 - 6.HTTP客户端</a></p></section></div></section><section id="footer"><div class="footer-wrap">
+    <p class="copyright">©2021 immuthex</p></div>
+</section></body>
+
+</html>
