@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.81.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.80.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 8.UDP客户端&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第八章（UDP客户端）中文翻译" /><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
+<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 8.UDP客户端&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第八章（UDP客户端）中文翻译" /><link rel="stylesheet" href="/css/core.min.f50770753e7b4a1cf823b8241022bf5a6908ecbc3cfcba59bfb76af28f94cceda372fd3dad1f0b6fb6592fd79f9fc1f3.css" integrity="sha384-9QdwdT57Shz4I7gkECK/WmkI7Lw8/LpZv7dq8o&#43;UzO2jcv09rR8Lb7ZZL9efn8Hz"><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Reactor Netty参考指南 - 8.UDP客户端" /><body><section id="header">
     <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Immuthex的博客</span></a></span>
         <span class="header right-side"><div class="nav wrap">
@@ -21,7 +21,7 @@
 <p>要将<code>UDP</code>客户端连接到给定的端点，您必须创建并且配置一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpClient.html"target="_blank" rel="noopener noreferrer"><code>UdpClient</code></a>
 实例。默认情况下，host为<code>localhost</code>，post为<code>12012</code>。下面是创建和连接一个UDP客户端的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/create/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/create/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/create/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.udp.UdpClient<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
@@ -47,7 +47,7 @@
 <h2 id="811host和port">8.1.1.Host和Port</h2>
 <p>想要连接特定的<code>host</code>和<code>port</code>，您可以使用以下方式来配置<code>UDP</code>客户端。示例如下：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/address/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/address/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/address/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.udp.UdpClient<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
@@ -83,7 +83,7 @@
 </ul>
 <p>当您需要预加载这些资源的时候，您可以按照以下方式来配置<code>UdpClient</code>：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/warmup/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/warmup/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/warmup/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.udp.UdpClient<span style="color:#f92672">;</span>
@@ -115,7 +115,7 @@
 来写出数据。</p>
 <p>下面是一个发送<code>hello</code>字符串的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/send/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/send/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/send/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.udp.UdpClient<span style="color:#f92672">;</span>
@@ -142,7 +142,7 @@
 <p>如果要接收从已有端点发过来的数据，您必须添加一个I/O处理器。这个I/O处理器可以通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/udp/UdpInbound.html"target="_blank" rel="noopener noreferrer"><code>UdpInbound</code></a>
 来读取数据。示例如下：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/read/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/read/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/read/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.udp.UdpClient<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
@@ -205,7 +205,7 @@
 </table>
 <p>下面是使用<code>doOnConnected</code>和<code>doOnChannelInit</code>回调的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/lifecycle/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/lifecycle/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/lifecycle/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.codec.LineBasedFrameDecoder<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> io.netty.handler.logging.LoggingHandler<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
@@ -261,7 +261,7 @@
 </code></pre></div></blockquote>
 <p>如果需要添加新的option或者修改已有的option，您可以使用如下的方式：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/channeloptions/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/channeloptions/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/channeloptions/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.ChannelOption<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.udp.UdpClient<span style="color:#f92672">;</span>
@@ -292,7 +292,7 @@
 <h2 id="862wire-logger">8.6.2.Wire Logger</h2>
 <p>Reactor Netty提供了线路记录（wire logging）用来检查点对点的流量。默认情况下，线路记录是关闭的。如果想要开启它，您必须将日志<code>reactor.netty.udp.UdpClient</code>的设置为<code>DEBUG</code>等级并且按如下方式进行配置：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/wiretap/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/wiretap/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/wiretap/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.udp.UdpClient<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
@@ -318,7 +318,7 @@
 或者<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#TEXTUAL</a>
 ：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/wiretap/custom/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/wiretap/custom/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/wiretap/custom/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.logging.LogLevel<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.transport.logging.AdvancedByteBufFormat<span style="color:#f92672">;</span>
@@ -380,7 +380,7 @@
 </code></pre></div></blockquote>
 <p>如果需要修改这些设置，您也可以通过如下方式进行配置：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/eventloop/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/eventloop/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/eventloop/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.resources.LoopResources<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.udp.UdpClient<span style="color:#f92672">;</span>
@@ -503,7 +503,7 @@
 </table>
 <p>下面是开启集成的度量的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/metrics/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/metrics/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/metrics/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.udp.UdpClient<span style="color:#f92672">;</span>
 
@@ -527,7 +527,7 @@
 </blockquote>
 <p>如果您想让UDP客户端度量与除了<code>Micrometer</code>之外的系统集成或者想提供自己与<code>Micrometer</code>的集成来添加自己的度量记录器，您可以按如下方式实现：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/metrics/custom/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/metrics/custom/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/udp/client/metrics/custom/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.Connection<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.channel.ChannelMetricsRecorder<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.udp.UdpClient<span style="color:#f92672">;</span>

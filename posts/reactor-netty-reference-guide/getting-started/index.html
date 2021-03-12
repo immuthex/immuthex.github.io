@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.81.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.80.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 2.入门指南&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第二章（入门指南）中文翻译" /><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
+<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 2.入门指南&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第二章（入门指南）中文翻译" /><link rel="stylesheet" href="/css/core.min.f50770753e7b4a1cf823b8241022bf5a6908ecbc3cfcba59bfb76af28f94cceda372fd3dad1f0b6fb6592fd79f9fc1f3.css" integrity="sha384-9QdwdT57Shz4I7gkECK/WmkI7Lw8/LpZv7dq8o&#43;UzO2jcv09rR8Lb7ZZL9efn8Hz"><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Reactor Netty参考指南 - 2.入门指南" /><body><section id="header">
     <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Immuthex的博客</span></a></span>
         <span class="header right-side"><div class="nav wrap">
@@ -37,9 +37,9 @@
 <li>Netty v4.1.x</li>
 </ul>
 <h1 id="23了解bom和版本方案">2.3.了解BOM和版本方案</h1>
-<p><code>Reactor Netty</code>是<code>Project Reactor BOM</code>的一部分（自从<code>Aluminium</code>发布以来）。这个设计好的列表将那些能更好的协同合作的artifacts进行分组，提供相关的版本，尽管这些artifacts中有可能有不同的版本方案。</p>
+<p><code>Reactor Netty</code>是<code>Project Reactor BOM</code>的一部分（自从<code>Aluminium</code>发布以来）。将那些能更好的协同合作的artifacts分为一组，提供相关的版本，尽管这些artifacts中有可能有不同的版本方案。</p>
 <blockquote>
-<p>在0.9.x到1.0.x之间（Dysprosium 和 Europium），版本方案已经改变。</p>
+<p>版本方案在0.9.x到1.0.x之间（Dysprosium 和 Europium）改变了。</p>
 </blockquote>
 <p>Artifacts遵循<code>MAJOR.MINOR.PATCH-QUALIFIER</code>的版本方案，而POM则受CalVer的启发使用<code>YYYY.MINOR.PATCH-QUALIFIER</code>的版本方案，其中：</p>
 <ul>
@@ -67,10 +67,10 @@
 <p>每个发布周期都有一个代号，延续之前的代号方案，可以在非正式的情况下使用（例如在讨论的时候，博客文章中等等）。这个代号代表着传统意义上的MAJOR.MINOR编号。他们（大多数）来自<a href="https://en.wikipedia.org/wiki/Periodic_table#Overview"target="_blank" rel="noopener noreferrer">元素周期表</a>
 ，按字母顺序递增。</p>
 <blockquote>
-<p>直到Dysprosium，BOM的版本发布方案都是按照一个代号后面加上一个修饰符的方式，并且限定词只是稍微有所不一样。例如：Aluminium-RELEASE (第一个GA版，现在应该是像YYYY.0.1这样的), Bismuth-M1, Californium-SR1 (服务发布现在应该是像YYYY.0.1这样的), Dysprosium-RC1, Dysprosium-BUILD-SNAPSHOT (每次打完补丁之后，我们都会回到相同的快照版本。现在应该是像YYYY.0.X-SNAPSHOT这样的，所以我们每个PATCH一个快照)</p>
+<p>直到Dysprosium，BOM的版本发布方案都是按照一个代号后面加上一个修饰符的方式，并且限定词只是稍微有所不一样。例如：Aluminium-RELEASE (第一个GA版，现在应该是像YYYY.0.0这样的), Bismuth-M1, Californium-SR1 (服务发布现在应该是像YYYY.0.1这样的), Dysprosium-RC1, Dysprosium-BUILD-SNAPSHOT (每次打完补丁之后，我们都会回到相同的快照版本。现在应该是像YYYY.0.X-SNAPSHOT这样的，所以我们每个PATCH一个快照)</p>
 </blockquote>
 <h1 id="24获取reactor-netty">2.4.获取Reactor Netty</h1>
-<p>正如我们<a href="#2.3.%e4%ba%86%e8%a7%a3BOM%e5%92%8c%e7%89%88%e6%9c%ac%e6%96%b9%e6%a1%88">之前提到</a>
+<p>正如我们<a href="#23%e4%ba%86%e8%a7%a3bom%e5%92%8c%e7%89%88%e6%9c%ac%e6%96%b9%e6%a1%88">之前提到</a>
 的，最简单的方式去使用<code>Reactor Netty</code>是去使用<code>BOM</code>并且在您的项目中添加相关的依赖。注意，当添加这种依赖关系的时候，不要指定版本，以便从BOM中获取版本。</p>
 <p>当然，如果您想强制使用指定的版本，您可以在添加依赖的时候指定您想用的版本。您也可以不使用BOM的方式，直接使用指定版本的依赖。</p>
 <h2 id="241maven安装">2.4.1.Maven安装</h2>
@@ -87,7 +87,7 @@
         <span style="color:#f92672">&lt;/dependency&gt;</span>
     <span style="color:#f92672">&lt;/dependencies&gt;</span>
 <span style="color:#f92672">&lt;/dependencyManagement&gt;</span>
-</code></pre></div><p>&lt;1&gt; 注意<code>dependencyManagement</code>节点。这个是在<code>dependencies</code>节点之外的。</p>
+</code></pre></div><p>&lt;1&gt; 注意<code>dependencyManagement</code>节点。这个是在<code>dependencies</code>节点外面的。</p>
 <p>&lt;2&gt; 截至写该文档的时候，<code>Dysprosium-SR10</code>是最新的<code>BOM</code>版本。访问 <a href="https://github.com/reactor/reactor/releases">https://github.com/reactor/reactor/releases</a> 检查更新。</p>
 </blockquote>
 <p>接下来，在相关的响应式项目中添加依赖，像往常一样（除了没有<code>&lt;version&gt;</code>节点），如下：</p>
@@ -143,12 +143,12 @@
 <span style="color:#f92672">}</span>
 </code></pre></div></blockquote>
 <h1 id="25支持和政策">2.5.支持和政策</h1>
-<p>以下条目是镜像https://github.com/reactor/.github/blob/master/SUPPORT.adoc</p>
+<p>以下条目的镜像请访问 <a href="https://github.com/reactor/.github/blob/master/SUPPORT.adoc">https://github.com/reactor/.github/blob/master/SUPPORT.adoc</a></p>
 <h2 id="251您是否还有问题">2.5.1.您是否还有问题？</h2>
 <blockquote>
 <p>首先在Stack Overflow中查看问题，如果有必要则开始讨论</p>
 </blockquote>
-<p>如果您确定为什么没有用，或者想知道是否有更好的方式去实现，请先在<code>Stack Overflow</code>上查看问题，如果有必要则开始讨论。使用如下的相关的标签：</p>
+<p>如果您不确定为什么没有效果，或者想知道是否有更好的方式去实现，请先在<code>Stack Overflow</code>上查看问题，如果有必要则开始讨论。使用如下的相关的标签：</p>
 <ul>
 <li><a href="https://stackoverflow.com/questions/tagged/reactor-netty"target="_blank" rel="noopener noreferrer">reactor-netty</a>
 关于reactor-netty的问题</li>
@@ -165,9 +165,9 @@
 针对netty相关的问题</li>
 </ul>
 <p>参考每个项目的README文件来获取其他的信息来源。</p>
-<p>我们通常不鼓励通过创建GitHub issue来问问题，有利于上述两个频道。</p>
+<p>我们通常不鼓励通过创建GitHub issue来问问题，建议使用以上两种方式来问问题。</p>
 <h2 id="252我们的弃用政策">2.5.2.我们的<code>弃用</code>政策</h2>
-<p>在处理弃用处理上，例如一个版本<code>A.B.C</code>，我们会确保：</p>
+<p>在弃用的处理上，例如一个版本<code>A.B.C</code>，我们会确保：</p>
 <ul>
 <li>
 <p>在<code>A.B.0</code>版本中弃用的部分不会在<code>A.B+1.0</code>版本<code>之前</code>被删除</p>
@@ -179,17 +179,17 @@
 <p>我们会努力在废弃的javadoc中提及如下内容：</p>
 <ul>
 <li>被删除的最低版本</li>
-<li>指明不推荐使用的方法的替代方法</li>
+<li>指明这个不推荐使用的方法的替代方法</li>
 <li>方法被标记为弃用的版本</li>
 </ul>
 <blockquote>
 <p>本政策自2021年1月起正式实施，适用于<code>2020.0</code> BOMs和更新版本中的所有模块，以及<code>Dysprosium-SR15</code>之后的<code>Dysprosium</code>版本。</p>
 </blockquote>
 <blockquote>
-<p>删除弃用不是硬性承诺，并且被弃用的方法可能会比那些最小的GA版本存在的更久（意思是：只有问题最严重的被弃用的方法才会被及时删除）。</p>
+<p>删除弃用不是硬性承诺，并且被弃用的方法<code>可能会比那些最小的GA版本存在的更久</code>（意思是：只有问题最严重的被弃用的方法才会被及时删除）。</p>
 </blockquote>
 <blockquote>
-<p>也就是说，被弃用的代码过了需要被删除的最小版本之后，可能会在后续的任何版本中被删除（包括补丁版本，也就是服务版本），并且不会在通知。所以使用者还是应该尽早的修改自己的代码。</p>
+<p>也就是说，被弃用的代码过了需要被删除的最小版本之后，可能会在后续的任何版本中被删除（包括补丁版本，也就是服务版本），并且不会在进行通知。所以使用者还是应该尽早的修改自己的代码。</p>
 </blockquote>
 </li>
 </ul>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.81.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="zh"><meta charset="utf-8"><meta name="generator" content="Hugo 0.80.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 6.HTTP客户端&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第六章（HTTP客户端）中文翻译" /><link rel="stylesheet" href="/css/core.min.615fa51c37c342f9111f46db696ab299cb089e23d2925a922a047a7a740f5f2e314b9888c9db5136fcdc211089b9dfa6.css" integrity="sha384-YV&#43;lHDfDQvkRH0bbaWqymcsIniPSklqSKgR6enQPXy4xS5iIydtRNvzcIRCJud&#43;m"><meta name="twitter:card" content="summary" />
+<meta name="supported-color-schemes" content="light dark"><title>Reactor Netty参考指南 - 6.HTTP客户端&nbsp;&ndash;&nbsp;Immuthex的博客</title><meta name="keywords" content="Reactor Netty,Reactor Netty中文文档,Reactor Netty参考指南" /><meta name="description" content="Reactor Netty参考指南第六章（HTTP客户端）中文翻译" /><link rel="stylesheet" href="/css/core.min.f50770753e7b4a1cf823b8241022bf5a6908ecbc3cfcba59bfb76af28f94cceda372fd3dad1f0b6fb6592fd79f9fc1f3.css" integrity="sha384-9QdwdT57Shz4I7gkECK/WmkI7Lw8/LpZv7dq8o&#43;UzO2jcv09rR8Lb7ZZL9efn8Hz"><meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Reactor Netty参考指南 - 6.HTTP客户端" /><body><section id="header">
     <div class="header wrap"><span class="header left-side"><a class="site home" href="/"><span class="site name">Immuthex的博客</span></a></span>
         <span class="header right-side"><div class="nav wrap">
@@ -21,7 +21,7 @@
 <p>要将<code>HTTP</code>客户端连接到给定的<code>HTTP</code>端点，您必须创建并且配置一个<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/client/HttpClient.html"target="_blank" rel="noopener noreferrer"><code>HttpClient</code></a>
 实例。示例如下：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/connect/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/connect/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/connect/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
@@ -44,7 +44,7 @@
 </blockquote>
 <p>下面是使用<code>WebSocket</code>的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/websocket/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/websocket/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/websocket/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.buffer.Unpooled<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> io.netty.util.CharsetUtil<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.core.publisher.Flux<span style="color:#f92672">;</span>
@@ -74,7 +74,7 @@
 <h2 id="611host和port">6.1.1.Host和Port</h2>
 <p>想要连接指定的host和port，您可以按照如下方式配置<code>HTTP</code>客户端：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/address/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/address/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/address/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
@@ -112,7 +112,7 @@
 </ul>
 <p>当您需要预加载这些资源的时候，您可以按照以下方式来配置<code>HttpClient</code>：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/warmup/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/warmup/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/warmup/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.ByteBufFlux<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
@@ -139,7 +139,7 @@
 <p>如果要发送数据到一个已有的<code>HTTP</code>端点，您需要通过<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/client/HttpClient.RequestSender.html#send-org.reactivestreams.Publisher-"target="_blank" rel="noopener noreferrer"><code>send(Publisher)</code></a>
 方法提供一个<code>Publisher</code>。默认情况下，对于那些用到了request body的<code>HTTP</code>方法会设置<code>Transfer-Encoding: chunked</code>。如果有必须，可以通过设置<code>Content-Length</code>来禁用掉<code>Transfer-Encoding: chunked</code>。下面是发送<code>hello</code>字符串的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/send/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/send/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/send/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.ByteBufFlux<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
@@ -161,7 +161,7 @@
 <h2 id="631添加headers和其他元数据">6.3.1.添加Headers和其他元数据</h2>
 <p>当您给已连接的客户端发送数据的时候，您可能想发送额外的headers,cookies和其他的元数据。您可以按照如下配置来实现：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/send/headers/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/send/headers/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/send/headers/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.codec.http.HttpHeaderNames<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.ByteBufFlux<span style="color:#f92672">;</span>
@@ -186,7 +186,7 @@
 <h3 id="压缩">压缩</h3>
 <p>您可以开启<code>HTTP</code>客户端的压缩，这意味着需要添加<code>Accept-Encoding</code>请求头。示例如下：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/compression/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/compression/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/compression/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
@@ -216,7 +216,7 @@
 </ul>
 <p>下面是使用<code>followRedirect(true)</code>的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/redirect/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/redirect/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/redirect/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
@@ -237,7 +237,7 @@
 <p>如果要接收从已有<code>HTTP</code>端点发过来的数据，您可以使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/client/HttpClient.ResponseReceiver.html"target="_blank" rel="noopener noreferrer"><code>HttpClient.ResponseReceiver</code></a>
 中的方法来实现。下面是使用<code>responseContent</code>方法的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/read/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/read/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/read/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
@@ -261,7 +261,7 @@
 <p>当接受从已有<code>HTTP</code>端点发送过来的数据的时候，您可以检查响应头，状态码和其他元数据。您可以使用<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/http/client/HttpClientResponse.html"target="_blank" rel="noopener noreferrer"><code>HttpClientResponse</code></a>
 来获取额外的元数据。示例如下：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/read/status/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/read/status/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/read/status/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
@@ -318,7 +318,7 @@
 </code></pre></div></blockquote>
 <p>当您需要改变这些配置的时候，您可以通过如下方式配置<code>HTTP</code>客户端：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/responsedecoder/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/responsedecoder/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/responsedecoder/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
@@ -413,7 +413,7 @@
 </table>
 <p>下面是使用<code>doOnConnection</code>和<code>doOnChannelInit</code>回调的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/lifecycle/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/lifecycle/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/lifecycle/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.logging.LoggingHandler<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> io.netty.handler.timeout.ReadTimeoutHandler<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
@@ -439,10 +439,10 @@
 </code></pre></div><p>&lt;1&gt; 在连接之后添加了一个<code>ReadTimeoutHandler</code>到<code>Netty</code> pipeline。</p>
 <p>&lt;2&gt; 在初始化channel的时候添加了一个<code>LoggingHandler</code>到<code>Netty</code> pipeline。</p>
 </blockquote>
-<h1 id="66tcp层面的配置">6.6.TCP层面的配置</h1>
-<p>当您需要修改TCP层面的配置的时候，您可以使用以下代码段来扩展默认的<code>TCP</code>客户端配置（添加一个option，绑定地址等等）：</p>
+<h1 id="66tcp层的配置">6.6.TCP层的配置</h1>
+<p>当您需要修改TCP层的配置的时候，您可以使用以下代码段来扩展默认的<code>TCP</code>客户端配置（添加一个option，绑定地址等等）：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/channeloptions/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/channeloptions/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/channeloptions/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.ChannelOption<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> java.net.InetSocketAddress<span style="color:#f92672">;</span>
@@ -467,12 +467,12 @@
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div></blockquote>
-<p>更多关于<code>TCP</code>层面的配置请查看<a href="https://projectreactor.io/docs/netty/release/reference/index.html#tcp-client"target="_blank" rel="noopener noreferrer">TCP Client</a>
+<p>更多关于<code>TCP</code>层的配置请查看<a href="https://projectreactor.io/docs/netty/release/reference/index.html#tcp-client"target="_blank" rel="noopener noreferrer">TCP Client</a>
 。</p>
-<h3 id="661wire-logger">6.6.1.Wire Logger</h3>
+<h2 id="661wire-logger">6.6.1.Wire Logger</h2>
 <p>Reactor Netty提供了线路记录（wire logging）用来检查点对点的流量。默认情况下，线路记录是关闭的。如果想要开启它，您必须将日志<code>reactor.netty.http.client.HttpClient</code>的设置为<code>DEBUG</code>等级并且按如下方式进行配置：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/wiretap/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/wiretap/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/wiretap/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Application</span> <span style="color:#f92672">{</span>
@@ -495,7 +495,7 @@
 或者<a href="https://projectreactor.io/docs/netty/release/api/reactor/netty/transport/logging/AdvancedByteBufFormat.html#TEXTUAL"target="_blank" rel="noopener noreferrer">AdvancedByteBufFormat#TEXTUAL</a>
 ：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/wiretap/custom/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/wiretap/custom/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/wiretap/custom/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.logging.LogLevel<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.transport.logging.AdvancedByteBufFormat<span style="color:#f92672">;</span>
@@ -522,7 +522,7 @@
 。可以通过<a href="https://netty.io/4.1/api/io/netty/handler/ssl/SslContextBuilder.html#sslProvider-io.netty.handler.ssl.SslProvider-"target="_blank" rel="noopener noreferrer"><code>SslContextBuilder</code></a>
 或者设置<code>-Dio.netty.handler.ssl.noOpenSsl=true</code>来进行切换：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/security/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/security/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/security/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.ssl.SslContextBuilder<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
@@ -545,7 +545,7 @@
 <h2 id="671服务器名称标识">6.7.1.服务器名称标识</h2>
 <p>默认情况下，<code>HTTP</code>客户端将远程主机名作为<code>SNI</code>服务器名发送。当您需要修改默认设置的时候，您可以通过如下方式配置<code>HTTP</code>客户端：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/sni/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/sni/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/sni/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.ssl.SslContext<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> io.netty.handler.ssl.SslContextBuilder<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
@@ -579,7 +579,7 @@
 </blockquote>
 <p>下面列出了一个简单的<code>H2</code>的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/http2/H2Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/http2/H2Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/http2/H2Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.handler.codec.http.HttpHeaders<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.core.publisher.Mono<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.HttpProtocol<span style="color:#f92672">;</span>
@@ -793,7 +793,7 @@
 </table>
 <p>下面是开启集成的度量的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/metrics/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/metrics/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/metrics/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.micrometer.core.instrument.Metrics<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> io.micrometer.core.instrument.config.MeterFilter<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
@@ -841,7 +841,7 @@
 </blockquote>
 <p>如果您想让HTTP客户端度量与除了<code>Micrometer</code>之外的系统集成或者想提供自己与<code>Micrometer</code>的集成来添加自己的度量记录器，您可以按如下方式实现：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/metrics/custom/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/metrics/custom/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/metrics/custom/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.channel.ChannelMetricsRecorder<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
@@ -869,7 +869,7 @@
 <p>当使用本地传输时，<code>HTTP</code>客户端支持Unix域套接字（UDS）。</p>
 <p>下面是使用UDS的例子：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/uds/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/uds/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/uds/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.channel.unix.DomainSocketAddress<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
@@ -892,7 +892,7 @@
 <p>默认情况下，<code>HttpClient</code>使用Netty的域名查询机制来异步解析域名。用来替代JVM内置阻塞解析器。</p>
 <p>当您需要修改默认设置的时候，您可以像如下通过配置<code>HttpClient</code>来实现：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/resolver/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/resolver/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/resolver/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
 <span style="color:#f92672">import</span> java.time.Duration<span style="color:#f92672">;</span>
@@ -991,7 +991,7 @@
 </table>
 <p>有时候，您或许想切换为JVM内建的解析器。您可以通过如下配置<code>HttpClient</code>的方式来实现：</p>
 <blockquote>
-<p>./../../reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/resolver/custom/Application.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/resolver/custom/Application.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-examples/src/main/java/reactor/netty/examples/documentation/http/client/resolver/custom/Application.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> io.netty.resolver.DefaultAddressResolverGroup<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> reactor.netty.http.client.HttpClient<span style="color:#f92672">;</span>
 
