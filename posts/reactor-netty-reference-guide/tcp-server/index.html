@@ -221,7 +221,7 @@
 <h2 id="361设置channel-options">3.6.1.设置Channel Options</h2>
 <p>默认情况下，<code>TCP</code>服务器配置了以下options：</p>
 <blockquote>
-<p>./../../reactor-netty-core/src/main/java/reactor/netty/tcp/TcpServerBind.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/tcp/TcpServerBind.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/tcp/TcpServerBind.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">TcpServerBind<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
 	Map<span style="color:#f92672">&lt;</span>ChannelOption<span style="color:#f92672">&lt;?&gt;,</span> Boolean<span style="color:#f92672">&gt;</span> childOptions <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;(</span>2<span style="color:#f92672">);</span>
 	childOptions<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>ChannelOption<span style="color:#f92672">.</span><span style="color:#a6e22e">AUTO_READ</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
@@ -311,7 +311,7 @@
 <code>#create</code>其中的一个方法来修改配置。</p>
 <p>默认的<code>Event Loop Group</code>配置如下：</p>
 <blockquote>
-<p>./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Default worker thread count, fallback to available processor
 </span><span style="color:#75715e"> * (but with a minimum value of 4)

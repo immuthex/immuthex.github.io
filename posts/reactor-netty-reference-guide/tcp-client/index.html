@@ -248,7 +248,7 @@
 <h2 id="461channel-options">4.6.1.Channel Options</h2>
 <p>默认情况下，<code>TCP</code>客户端配置了以下options：</p>
 <blockquote>
-<p>./../../reactor-netty-core/src/main/java/reactor/netty/tcp/TcpClientConnect.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/tcp/TcpClientConnect.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/tcp/TcpClientConnect.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">TcpClientConnect<span style="color:#f92672">(</span>ConnectionProvider provider<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">config</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TcpClientConfig<span style="color:#f92672">(</span>
         provider<span style="color:#f92672">,</span>
@@ -345,7 +345,7 @@
 <code>#create</code>其中的一个方法来修改配置。</p>
 <p>默认的<code>Event Loop Group</code>配置如下：</p>
 <blockquote>
-<p>./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Default worker thread count, fallback to available processor
 </span><span style="color:#75715e"> * (but with a minimum value of 4)
@@ -404,7 +404,7 @@
 <h1 id="47连接池">4.7.连接池</h1>
 <p>默认情况下，<code>TCP</code>客户端使用一个&quot;固定的&quot;的连接池，最大的channel数量是500，待处理队列中最大的获取注册请求数为<code>1000</code>（其余配置请查看下面的系统属性）。这意味着，如果有人尝试从池中获取一个channel，但是池中没有可用的channel则会创建一个新的channel。当池中的channel数量达到了最大值时，新的获取channel的操作会被延迟，直到一个可用的channel再次返回到池中。</p>
 <blockquote>
-<p>./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java</p>
+<p><a href="https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java">https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java</a></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Default max connections. Fallback to
 </span><span style="color:#75715e"> * available number of processors (but with a minimum value of 16)

@@ -259,7 +259,7 @@
 &lt;h2 id=&#34;861channel-options&#34;&gt;8.6.1.Channel Options&lt;/h2&gt;
 &lt;p&gt;默认情况下，&lt;code&gt;UDP&lt;/code&gt;客户端配置了以下options：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/udp/UdpClientConnect.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/udp/UdpClientConnect.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/udp/UdpClientConnect.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;UdpClientConnect&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
   &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;config&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; UdpClientConfig&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
           ConnectionProvider&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;newConnection&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(),&lt;/span&gt;
@@ -354,7 +354,7 @@
 &lt;code&gt;#create&lt;/code&gt;其中的一个方法来修改配置。&lt;/p&gt;
 &lt;p&gt;默认的&lt;code&gt;Event Loop Group&lt;/code&gt;配置如下：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default worker thread count, fallback to available processor
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * (but with a minimum value of 4)
@@ -835,7 +835,7 @@
 &lt;h2 id=&#34;761channel-options&#34;&gt;7.6.1.Channel Options&lt;/h2&gt;
 &lt;p&gt;默认情况下，&lt;code&gt;UDP&lt;/code&gt;服务器配置了以下options：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/udp/UdpServerBind.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/udp/UdpServerBind.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/udp/UdpServerBind.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;UdpServerBind&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
   &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;config&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; UdpServerConfig&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
       Collections&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;singletonMap&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;ChannelOption&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;AUTO_READ&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;),&lt;/span&gt;
@@ -930,7 +930,7 @@
 &lt;code&gt;#create&lt;/code&gt;其中的一个方法来修改配置。&lt;/p&gt;
 &lt;p&gt;默认的&lt;code&gt;Event Loop Group&lt;/code&gt;配置如下：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default worker thread count, fallback to available processor
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * (but with a minimum value of 4)
@@ -1423,7 +1423,7 @@
 &lt;/p&gt;
 &lt;p&gt;默认情况下，&lt;code&gt;HTTP&lt;/code&gt;客户端配置如下：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-http/src/main/java/reactor/netty/http/HttpDecoderSpec.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/HttpDecoderSpec.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/HttpDecoderSpec.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; DEFAULT_MAX_INITIAL_LINE_LENGTH &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 4096&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; DEFAULT_MAX_HEADER_SIZE         &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 8192&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; DEFAULT_MAX_CHUNK_SIZE          &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 8192&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
@@ -1431,7 +1431,7 @@
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; DEFAULT_INITIAL_BUFFER_SIZE     &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 128&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-http/src/main/java/reactor/netty/http/client/HttpResponseDecoderSpec.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/client/HttpResponseDecoderSpec.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/client/HttpResponseDecoderSpec.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;boolean&lt;/span&gt; DEFAULT_FAIL_ON_MISSING_RESPONSE         &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;boolean&lt;/span&gt; DEFAULT_PARSE_HTTP_AFTER_CONNECT_REQUEST &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 
@@ -1736,7 +1736,7 @@
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;691选择协议&#34;&gt;6.9.1.选择协议&lt;/h2&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-http/src/main/java/reactor/netty/http/HttpProtocol.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/HttpProtocol.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/HttpProtocol.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; HttpProtocol &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
 
 	&lt;span style=&#34;color:#75715e&#34;&gt;/**
@@ -2596,7 +2596,7 @@
 &lt;/p&gt;
 &lt;p&gt;默认情况下，&lt;code&gt;HTTP&lt;/code&gt;服务器配置如下：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-http/src/main/java/reactor/netty/http/HttpDecoderSpec.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/HttpDecoderSpec.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/HttpDecoderSpec.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; DEFAULT_MAX_INITIAL_LINE_LENGTH &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 4096&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; DEFAULT_MAX_HEADER_SIZE         &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 8192&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; DEFAULT_MAX_CHUNK_SIZE          &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 8192&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
@@ -2604,7 +2604,7 @@
 &lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;static&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;final&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; DEFAULT_INITIAL_BUFFER_SIZE     &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 128&lt;span style=&#34;color:#f92672&#34;&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-http/src/main/java/reactor/netty/http/server/HttpRequestDecoderSpec.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/server/HttpRequestDecoderSpec.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/server/HttpRequestDecoderSpec.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * The maximum length of the content of the HTTP/2.0 clear-text upgrade request.
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * By default the server will reject an upgrade request with non-empty content,
@@ -3014,7 +3014,7 @@ hello
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
 &lt;h2 id=&#34;5101选择协议&#34;&gt;5.10.1.选择协议&lt;/h2&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-http/src/main/java/reactor/netty/http/HttpProtocol.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/HttpProtocol.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-http/src/main/java/reactor/netty/http/HttpProtocol.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;public&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;enum&lt;/span&gt; HttpProtocol &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
 
 	&lt;span style=&#34;color:#75715e&#34;&gt;/**
@@ -3505,7 +3505,7 @@ hello
 &lt;h2 id=&#34;461channel-options&#34;&gt;4.6.1.Channel Options&lt;/h2&gt;
 &lt;p&gt;默认情况下，&lt;code&gt;TCP&lt;/code&gt;客户端配置了以下options：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/tcp/TcpClientConnect.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/tcp/TcpClientConnect.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/tcp/TcpClientConnect.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;TcpClientConnect&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;ConnectionProvider provider&lt;span style=&#34;color:#f92672&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
     &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;config&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; TcpClientConfig&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;
         provider&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt;
@@ -3602,7 +3602,7 @@ hello
 &lt;code&gt;#create&lt;/code&gt;其中的一个方法来修改配置。&lt;/p&gt;
 &lt;p&gt;默认的&lt;code&gt;Event Loop Group&lt;/code&gt;配置如下：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default worker thread count, fallback to available processor
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * (but with a minimum value of 4)
@@ -3661,7 +3661,7 @@ hello
 &lt;h1 id=&#34;47连接池&#34;&gt;4.7.连接池&lt;/h1&gt;
 &lt;p&gt;默认情况下，&lt;code&gt;TCP&lt;/code&gt;客户端使用一个&amp;quot;固定的&amp;quot;的连接池，最大的channel数量是500，待处理队列中最大的获取注册请求数为&lt;code&gt;1000&lt;/code&gt;（其余配置请查看下面的系统属性）。这意味着，如果有人尝试从池中获取一个channel，但是池中没有可用的channel则会创建一个新的channel。当池中的channel数量达到了最大值时，新的获取channel的操作会被延迟，直到一个可用的channel再次返回到池中。&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default max connections. Fallback to
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * available number of processors (but with a minimum value of 16)
@@ -4461,7 +4461,7 @@ hello
 &lt;h2 id=&#34;361设置channel-options&#34;&gt;3.6.1.设置Channel Options&lt;/h2&gt;
 &lt;p&gt;默认情况下，&lt;code&gt;TCP&lt;/code&gt;服务器配置了以下options：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/tcp/TcpServerBind.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/tcp/TcpServerBind.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/tcp/TcpServerBind.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;TcpServerBind&lt;span style=&#34;color:#f92672&#34;&gt;()&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;{&lt;/span&gt;
 	Map&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;ChannelOption&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;?&amp;gt;,&lt;/span&gt; Boolean&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; childOptions &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; HashMap&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&amp;gt;(&lt;/span&gt;2&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
 	childOptions&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;put&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;(&lt;/span&gt;ChannelOption&lt;span style=&#34;color:#f92672&#34;&gt;.&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;AUTO_READ&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;,&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;);&lt;/span&gt;
@@ -4551,7 +4551,7 @@ hello
 &lt;code&gt;#create&lt;/code&gt;其中的一个方法来修改配置。&lt;/p&gt;
 &lt;p&gt;默认的&lt;code&gt;Event Loop Group&lt;/code&gt;配置如下：&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;./../../reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&#34;&gt;https://github.com/reactor/reactor-netty/blob/master/reactor-netty-core/src/main/java/reactor/netty/ReactorNetty.java&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;/**
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * Default worker thread count, fallback to available processor
 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; * (but with a minimum value of 4)
