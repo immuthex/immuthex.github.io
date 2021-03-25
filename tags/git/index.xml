@@ -176,8 +176,8 @@
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Callback&lt;/th&gt;
-&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;回调函数&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
@@ -766,8 +766,8 @@
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Callback&lt;/th&gt;
-&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;回调函数&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
@@ -1470,8 +1470,8 @@
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Callback&lt;/th&gt;
-&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;回调函数&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
@@ -2640,8 +2640,8 @@
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Callback&lt;/th&gt;
-&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;回调函数&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
@@ -3421,8 +3421,8 @@ hello
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Callback&lt;/th&gt;
-&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;回调函数&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
@@ -4387,8 +4387,8 @@ hello
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Callback&lt;/th&gt;
-&lt;th&gt;Description&lt;/th&gt;
+&lt;th&gt;回调函数&lt;/th&gt;
+&lt;th&gt;描述&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
